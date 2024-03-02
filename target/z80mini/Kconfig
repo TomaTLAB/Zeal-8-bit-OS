@@ -1,4 +1,4 @@
-menu "Z80mini configuration"
+menu "Z80mini  configuration"
 
     # Assign a number to each target
     config TARGET_NUMBER
