@@ -1,13 +1,46 @@
-menu "Zeal 8-bit Computer configuration"
+menu "Z80mini configuration"
 
     # Assign a number to each target
     config TARGET_NUMBER
         int
-        default 1
+        default 4
 
     config TARGET_HAS_MMU
         bool
         default y
+
+    config TARGET_MMU_ADDRESS
+        depends on TARGET_HAS_MMU
+        hex "Mapper I/O address"
+        default 0xF0
+        range 0x00 0xF0
+        help
+            Address where the MMU is mapped on the I/O bus. This should be the address of the first
+            register.
+
+    config TARGET_PIO_ADDRESS
+        hex "PIO address"
+        default 0xD0
+        range 0x00 0xFC
+        help
+            Address where the PIO is mapped on the I/O bus. This should be the address of the first
+            register.
+
+    config TARGET_PS2_ADDRESS
+        hex "PS/2 address"
+        default 0xE0
+        range 0x00 0xFC
+        help
+            Address where the PS/2 port is mapped on the I/O bus. This should be the address of the first
+            register.
+
+    config TARGET_UART_ADDRESS
+        hex "UART address"
+        default 0x08
+        range 0x00 0xFC
+        help
+            Address where the UART is mapped on the I/O bus. This should be the address of the first
+            register.
 
     config TARGET_HAS_DRIVERS_HOOK
         bool
@@ -15,7 +48,7 @@ menu "Zeal 8-bit Computer configuration"
 
     config KERNEL_RAM_PHYS_ADDRESS
         hex "Kernel RAM physical address"
-        default 0x88000
+        default 0x80000
         range 0x80000 0xFC000
         help
             Physical address where the Kernel and drivers data (including BSS) will be stored in RAM.
@@ -23,16 +56,16 @@ menu "Zeal 8-bit Computer configuration"
 
     config ROMDISK_ADDRESS
         hex "ROMDISK image physical address"
-        default 0x8000
-        range 0x4000 0x3C000
+        default 0x04000
+        range 0x04000 0x3C000
         help
             Address where the ROMDISK image will be placed in flash memory. As flash is mapped at physical address 0x0000,
             this value also represents the physical address of ROMDISK image.
 
     config KERNEL_PHYS_ADDRESS
         hex "Physical address of the kernel"
-        default 0x0000
-        range 0x0000 0x3C000
+        default 0x00000
+        range 0x00000 0x3C000
         help
             Address where the kernel/OS will be placed in flash memory. This will be used to calculate the offset between,
             the kernel and the romdisk. For example, if kernel is meant to be flashed at 0x4000 and the romdisk at 0x8000,
@@ -42,8 +75,7 @@ menu "Zeal 8-bit Computer configuration"
         bool "Enable MMU support in the kernel"
         default y
         help
-            Let the kernel be aware that an MMU is present or not. This value must be enabled to have full support for Zeal 8-bit
-            Computer target.
+            Let the kernel be aware that an MMU is present or not. 
             Disable this option to test no-MMU kernel. Video driver will be disabled, standard output will be done through UART.
 
     config TARGET_ENABLE_COMPACTFLASH

@@ -12,6 +12,7 @@ mainmenu "Zeal 8-bit OS Configuration"
         default "zeal8bit" if TARGET_ZEAL_8_BIT
         default "trs80" if TARGET_TRS_80
         default "agon" if TARGET_AGON_LIGHT
+        default "z80mini" if TARGET_Z80_MINI
 
     choice COMPILATION_TARGET
         prompt "Target board"
@@ -36,11 +37,11 @@ mainmenu "Zeal 8-bit OS Configuration"
             help
                 Compile for Agon Light.
 
-        config 
+        config TARGET_Z80_MINI
             bool
-            prompt "Z80 mini"
+            prompt "Z80mini"
             help
-                Compile for Z80 mini.
+                Compile for Z80mini.
     endchoice
 
     # Configuration options depending on the target
