@@ -35,6 +35,12 @@ mainmenu "Zeal 8-bit OS Configuration"
             prompt "Agon Light"
             help
                 Compile for Agon Light.
+
+        config 
+            bool
+            prompt "Z80 mini"
+            help
+                Compile for Z80 mini.
     endchoice
 
     # Configuration options depending on the target
@@ -48,6 +54,10 @@ mainmenu "Zeal 8-bit OS Configuration"
 
     if TARGET_AGON_LIGHT
         source "target/agon/Kconfig"
+    endif
+
+    if TARGET_Z80_MINI
+        source "target/z80mini/Kconfig"
     endif
 
     source "kernel/Kconfig"

@@ -1,0 +1,141 @@
+menu "Zeal 8-bit Computer configuration"
+
+    # Assign a number to each target
+    config TARGET_NUMBER
+        int
+        default 1
+
+    config TARGET_HAS_MMU
+        bool
+        default y
+
+    config TARGET_HAS_DRIVERS_HOOK
+        bool
+        default y
+
+    config KERNEL_RAM_PHYS_ADDRESS
+        hex "Kernel RAM physical address"
+        default 0x88000
+        range 0x80000 0xFC000
+        help
+            Physical address where the Kernel and drivers data (including BSS) will be stored in RAM.
+            If the kernel is meant to be executed from RAM, this value must be checked to avoid overlapping with kernel code!
+
+    config ROMDISK_ADDRESS
+        hex "ROMDISK image physical address"
+        default 0x8000
+        range 0x4000 0x3C000
+        help
+            Address where the ROMDISK image will be placed in flash memory. As flash is mapped at physical address 0x0000,
+            this value also represents the physical address of ROMDISK image.
+
+    config KERNEL_PHYS_ADDRESS
+        hex "Physical address of the kernel"
+        default 0x0000
+        range 0x0000 0x3C000
+        help
+            Address where the kernel/OS will be placed in flash memory. This will be used to calculate the offset between,
+            the kernel and the romdisk. For example, if kernel is meant to be flashed at 0x4000 and the romdisk at 0x8000,
+            the latter will be at a distance of <romdisk_address> - <kernel_entry> = 0x4000 bytes from the kernel entry.
+
+    config KERNEL_TARGET_HAS_MMU
+        bool "Enable MMU support in the kernel"
+        default y
+        help
+            Let the kernel be aware that an MMU is present or not. This value must be enabled to have full support for Zeal 8-bit
+            Computer target.
+            Disable this option to test no-MMU kernel. Video driver will be disabled, standard output will be done through UART.
+
+    config TARGET_ENABLE_COMPACTFLASH
+        bool
+        prompt "Enable CompactFlash driver (EXPERIMENTAL)"
+        default y
+        help
+            Import the CompactFlash driver in the kernel compilation. If this option is enabled, the CompactFlash will be seen
+            as a disk by the kernel. The address and and the initialization timeout can be configured.
+            NOTE: At the moment, only reads are supported and the CompactFlash must be using `rawtable` filesystem.
+
+    menu "CompactFlash driver configuration"
+        depends on TARGET_ENABLE_COMPACTFLASH
+
+        config TARGET_COMPACTFLASH_ADDRESS
+            hex "CompactFlash I/O address"
+            default 0x70
+            range 0x00 0xF8
+            help
+                Address where the CompactFlash is mapped on the I/O bus. This should be the address of the first
+                register (Data register).
+
+        config TARGET_COMPACTFLASH_TIMEOUT
+            int "CompactFlash initialization timeout (ms)"
+            default 30
+            range 0 65535
+            help
+                On startup, the CompactFlash takes some time to initialize itself, this will slow down the kernel startup time.
+                This configuration value decides how long the driver should wait for the card to be ready before giving up and
+                ignoring it until the next reset.
+
+    endmenu
+
+
+    config TARGET_ENABLE_VIDEO
+        bool
+        prompt "Enable video driver" if KERNEL_TARGET_HAS_MMU
+        default "y" if KERNEL_TARGET_HAS_MMU
+        default "n" if !KERNEL_TARGET_HAS_MMU
+        help
+            Import the video driver in the kernel compilation. If this option is disabled, the UART will become the default
+            standard output.
+
+    choice TARGET_STDOUT
+        prompt "Standard output driver"
+        default TARGET_STDOUT_VIDEO if TARGET_ENABLE_VIDEO
+        default TARGET_STDOUT_UART if !TARGET_ENABLE_VIDEO
+        help
+            Choose the which driver will act as the standard output.
+
+        config TARGET_STDOUT_VIDEO
+            bool
+            prompt "Video driver"
+            depends on TARGET_ENABLE_VIDEO
+            help
+                Use the (FPGA-based) video board as the standard output.
+
+        config TARGET_STDOUT_UART
+            bool
+            prompt "UART driver"
+            help
+                Use the UART driver as the standard output.
+    endchoice
+
+
+    choice TARGET_KEYBOARD_LAYOUT
+        prompt "PS/2 Keyboard layout"
+        default TARGET_KEYBOARD_QWERTY
+        help
+            Choose the layout for the PS/2 keyboard.
+
+        config TARGET_KEYBOARD_QWERTY
+            bool
+            prompt "Qwerty"
+            help
+                Use standard QWERTY layout.
+
+        config TARGET_KEYBOARD_DVORAK
+            bool
+            prompt "Dvorak"
+            help
+                Use Dvorak layout.
+    endchoice
+
+
+    config TARGET_UART_SET_MONITOR_SIZE
+        bool
+        prompt "Resize host monitor to 80x40"
+        default y
+        depends on TARGET_STDOUT_UART
+        help
+            When enabled, the UART driver will sent a request to the host monitor to resize
+            its terminal to 80x40 characters mode on bootup.
+
+endmenu
