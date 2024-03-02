@@ -1,17 +1,19 @@
 ; SPDX-FileCopyrightText: 2023 Zeal 8-bit Computer <contact@zeal8bit.com>
 ;
 ; SPDX-License-Identifier: Apache-2.0
-
+    
     IFNDEF PIO_H
     DEFINE PIO_H
+
+    INCLUDE "osconfig.asm"
 
     ; Chip is enabled when address high nibble is 0xD
     ; Data/Ctrl selection is bit 1
     ; Port A/B selection is bit 0
-    DEFC IO_PIO_DATA_A = 0xd0
-    DEFC IO_PIO_DATA_B = 0xd1
-    DEFC IO_PIO_CTRL_A = 0xd2
-    DEFC IO_PIO_CTRL_B = 0xd3
+    DEFC IO_PIO_DATA_A = CONFIG_TARGET_PIO_ADDRESS + 0
+    DEFC IO_PIO_DATA_B = CONFIG_TARGET_PIO_ADDRESS + 1
+    DEFC IO_PIO_CTRL_A = CONFIG_TARGET_PIO_ADDRESS + 2
+    DEFC IO_PIO_CTRL_B = CONFIG_TARGET_PIO_ADDRESS + 3
 
     ; PIO Modes
     DEFC IO_PIO_MODE0 = 0x0f

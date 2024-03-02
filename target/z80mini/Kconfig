@@ -34,13 +34,20 @@ menu "Z80mini configuration"
             Address where the PS/2 port is mapped on the I/O bus. This should be the address of the first
             register.
 
-    config TARGET_UART_ADDRESS
-        hex "UART address"
-        default 0x08
-        range 0x00 0xFC
+    config TARGET_ENABLE_HARDWARE_UART
+        bool
+        prompt "Enable hardware 8251 UART"
+        default y
         help
-            Address where the UART is mapped on the I/O bus. This should be the address of the first
-            register.
+            Enables support for 8251 hardware UART chip
+        config TARGET_UART_ADDRESS
+            depends on TARGET_ENABLE_HARDWARE_UART
+            hex "UART address"
+            default 0x08
+            range 0x00 0xFC
+            help
+                Address where the UART is mapped on the I/O bus. This should be the address of the first
+                register.
 
     config TARGET_HAS_DRIVERS_HOOK
         bool

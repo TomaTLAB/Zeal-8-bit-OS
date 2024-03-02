@@ -22,10 +22,10 @@
     DEFC MMU_KERNEL_RAM_PAGE_INDEX = (CONFIG_KERNEL_RAM_PHYS_ADDRESS >> 14) - MMU_RAM_PHYS_START_IDX
 
     ; MMU pages configuration I/O address
-    DEFC MMU_PAGE_0 = 0xF0
-    DEFC MMU_PAGE_1 = 0xF1
-    DEFC MMU_PAGE_2 = 0xF2
-    DEFC MMU_PAGE_3 = 0xF3
+    DEFC MMU_PAGE_0 = CONFIG_TARGET_MMU_ADDRESS + 0
+    DEFC MMU_PAGE_1 = CONFIG_TARGET_MMU_ADDRESS + 1
+    DEFC MMU_PAGE_2 = CONFIG_TARGET_MMU_ADDRESS + 2
+    DEFC MMU_PAGE_3 = CONFIG_TARGET_MMU_ADDRESS + 3
 
 
     ; Routines implemented in `mmu.asm` source file
@@ -37,7 +37,7 @@
 
     ; Macro used to map a physical address to a virtual page. Both must be defined at compile time.
     MACRO MMU_MAP_PHYS_ADDR page, address
-        ASSERT(address < 0x400000) ; Max 4MB of physical memory
+        ASSERT(address < 0x100000) ; Max 1MB of physical memory
         ld a, address >> 14  ; Virtual address are 16 - 2 = 14 bits wide
         out (page), a
     ENDM

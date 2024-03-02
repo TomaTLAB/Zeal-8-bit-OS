@@ -5,10 +5,11 @@
     IFNDEF KEYBOARD_H
     DEFINE KEYBOARD_H
 
+    INCLUDE "osconfig.asm"
     INCLUDE "drivers/keyboard_h.asm"
 
     ; Macros for keyboard
-    DEFC KB_IO_ADDRESS = 0xE8
+    DEFC KB_IO_ADDRESS = CONFIG_TARGET_PS2_ADDRESS
 
     DEFGROUP {
         BASE_SCAN_TABLE,
