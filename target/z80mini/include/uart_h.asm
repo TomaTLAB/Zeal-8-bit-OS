@@ -5,6 +5,11 @@
     IFNDEF UART_H
     DEFINE UART_H
 
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+        DEFC UART_IO_D = CONFIG_TARGET_UART_ADDRESS
+        DEFC UART_IO_C = CONFIG_TARGET_UART_ADDRESS + 1
+    ENDIF
+
     ; UART commands, start at 0x80 to allow drivers to also handle the video commands (when UART is STDOUT)
     DEFGROUP {
         ; The attributes bits are defines below

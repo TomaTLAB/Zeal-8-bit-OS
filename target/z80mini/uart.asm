@@ -33,6 +33,20 @@ uart_init:
         ld a, UART_BAUDRATE_DEFAULT
         ld (_uart_baudrate), a
 
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+	ld hl, _uart_init_SINTTB
+	ld bc, $0006
+uart_init_loop:
+	dec b
+	jr nz, uart_init_loop:
+	ld a, (hl)
+	inc hl
+	out (UART_IO_C), a
+	dec c
+	jr nz, uart_init_loop:
+	in a, (UART_IO_D) ; clear RX
+    ENDIF
+ 
     IF CONFIG_TARGET_STDOUT_UART
         ; Initialize the PIO because UART is the first driver. It will initialize
         ; itself once more later, but that's not an issue.
@@ -85,6 +99,17 @@ uart_deinit:
         xor a
         ret
 
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+_uart_init_SINTTB:
+;	Initialise 8251
+	DEFM	0x00      ;dummy syn mode
+        DEFM	0x00      ;dummy syn0
+        DEFM	0x00      ;dummy syn1
+        DEFM	0x40     ;soft reset
+;        DEFM	0x4F     ;8 bit, 1 stop-bit, no parity, devider 1:64
+        DEFM	0x4E     ;8 bit, 1 stop-bit, no parity, devider 1:16
+        DEFM	0x35     ;enable send and receive, set RTS_LOW and reset error triggers
+    ENDIF
 
     IF CONFIG_TARGET_STDOUT_UART
         ; At init, set the whole screen to black background and
@@ -438,7 +463,18 @@ uart_send_byte:
         call _uart_send_byte_raw
         ld a, '\n'
         ; Fall-through
+
 _uart_send_byte_raw:
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+	ld c, a 		; Store character
+_uart_send_byte_raw_loop:
+	in a, (UART_IO_C)	        ; Read UART status
+	and 0b00000001		        ; Mask TX Ready bit
+	jr z, _uart_send_byte_raw_loop	; Loop until flag ready
+        ld a, c		                ; Retrieve character
+	out (UART_IO_D), a	        ; Send the character
+
+    ELSE
         ; Shift B to match TX pin
         ASSERT(IO_UART_TX_PIN <= 7)
         REPT IO_UART_TX_PIN
@@ -499,6 +535,7 @@ uart_send_byte_next_bit:
         out (IO_PIO_SYSTEM_DATA), a
         ; Output some delay after the stop bit too
         call wait_104_d_87_tstates
+    ENDIF
         ret
 
         ; Receive a sequences of bytes on the UART.
@@ -544,6 +581,13 @@ _uart_receive_next_byte:
         ; Alters:
         ;   A, B, E
 uart_receive_byte:
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+        in a, (UART_IO_C)               ; Read UART status
+	and 0b00000010                  ; Mask RX Ready bit
+	jp z, uart_receive_byte:        ; Loop until flag ready
+        in a, (UART_IO_D)               ; Read received character
+
+    ELSE
         ld e, 8
         ; A will contain the data read from PIO
         xor a
@@ -658,6 +702,7 @@ wait_tstates_next_bit_87_tstates:
         ex (sp), hl
         push hl
         pop hl
+    ENDIF
         ret
 
         ;======================================================================;
