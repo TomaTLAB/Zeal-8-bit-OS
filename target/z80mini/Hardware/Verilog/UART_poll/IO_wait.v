@@ -1,6 +1,6 @@
 module IO_wait(
-   input wire clk, n_res, n_iorq,
-	output wire n_wait
+   input wire clk, clk0, n_res, n_iorq,
+	output wire io_wt
 );
 
 	reg [1:0] iowait;
@@ -9,11 +9,13 @@ module IO_wait(
 		if (!n_res) begin
 			iowait <= 2'b00;
 		end else begin
-			iowait[0] <= n_iorq;
-			iowait[1] <= iowait[0];
+			if (clk0) begin
+				iowait[0] <= n_iorq;
+				iowait[1] <= iowait[0];
+			end
 		end
 	end
 	
-	assign n_wait = ~(~iowait[0] & iowait[1]);
+	assign io_wt = ~iowait[0] & iowait[1];
 
 endmodule

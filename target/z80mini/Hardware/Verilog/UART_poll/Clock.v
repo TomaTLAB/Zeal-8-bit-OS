@@ -1,26 +1,32 @@
 module frequency_generator(
-    input clock_in,
-    output cpu_clk,
-    output t_clk,
-    output con_clk,
-    output tim_clk
-	 
+	input clock_in,
+	output cpu_clk,
+	output cpu_clk0,
+	output t_clk,
+	output con_clk,
+	output con_clk0
 );
-    reg [3:0] pre_counter = 4'd0;
-	 reg [3:0] main_counter = 3'd0;
+	reg [5:0] con_counter = 6'd0;
+	reg [2:0] cpu_counter = 3'd0;
+	reg t = 1'd0;
 
-    always @(posedge clock_in)
-        begin
-            pre_counter <= pre_counter + 4'd1;
-            if(pre_counter >= 4) begin
-					pre_counter <= 4'd0;
-					main_counter <= main_counter + 3'd1; // Increment at 10MHz
-				end
-        end
-		  
-    assign t_clk = main_counter[0]; // 5MHz
-    assign cpu_clk = main_counter[0]; // 5 MHz
-    assign con_clk = main_counter[3]; // 625 KHz
-    assign tim_clk = ~|main_counter; // 625 KHz
+	always @(posedge clock_in)
+		begin
+			con_counter <= con_counter + 1;
+			cpu_counter <= cpu_counter + 1;
+			if(con_counter >= 53) begin
+				con_counter <= 0;
+			end
+			if(cpu_counter >= 4) begin
+				cpu_counter <= 0;
+				t <= ~ t;
+			end
+		end
+
+	assign cpu_clk = cpu_counter[1]; // 10MHz
+	assign cpu_clk0 = cpu_counter == 0;
+	assign t_clk = t; // 5MHz
+	assign con_clk = con_counter >= 27; // 925925/16=57870(0.47%)
+	assign con_clk0 = con_counter == 0;
 
 endmodule

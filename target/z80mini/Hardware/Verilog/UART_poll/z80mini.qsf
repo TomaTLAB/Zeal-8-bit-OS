@@ -97,14 +97,6 @@ set_location_assignment PIN_50 -to nROMCS
 set_location_assignment PIN_39 -to nWAIT
 set_location_assignment PIN_46 -to CPUCLK
 set_location_assignment PIN_49 -to CONCLK
-set_location_assignment PIN_73 -to EXT_P_OUT[0]
-set_location_assignment PIN_77 -to EXT_P_IN[0]
-set_location_assignment PIN_79 -to EXT_P_IN[1]
-set_location_assignment PIN_80 -to EXT_P_IN[2]
-set_location_assignment PIN_81 -to EXT_P_IN[3]
-set_location_assignment PIN_74 -to EXT_P_OUT[1]
-set_location_assignment PIN_75 -to EXT_P_OUT[2]
-set_location_assignment PIN_76 -to EXT_P_OUT[3]
 set_global_assignment -name VERILOG_FILE IO_wait.v
 set_global_assignment -name DEVICE_FILTER_PACKAGE PLCC
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 84
@@ -117,3 +109,12 @@ set_location_assignment PIN_68 -to RS
 set_location_assignment PIN_69 -to RW
 set_location_assignment PIN_70 -to E
 set_global_assignment -name VERILOG_FILE PS2_receiver.v
+set_global_assignment -name VERILOG_FILE Sig_cond.v
+set_location_assignment PIN_81 -to EXT_P[7]
+set_location_assignment PIN_80 -to EXT_P[6]
+set_location_assignment PIN_79 -to EXT_P[5]
+set_location_assignment PIN_77 -to EXT_P[4]
+set_location_assignment PIN_76 -to EXT_P[3]
+set_location_assignment PIN_75 -to EXT_P[2]
+set_location_assignment PIN_74 -to EXT_P[1]
+set_location_assignment PIN_73 -to EXT_P[0]
