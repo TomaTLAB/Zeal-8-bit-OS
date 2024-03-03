@@ -549,6 +549,9 @@ uart_send_byte_next_bit:
         ;   A, BC, HL
 uart_receive_bytes:
         ; Check that the length is not 0
+    IF CONFIG_TARGET_ENABLE_HARDWARE_UART
+        in a, (UART_IO_D)               ; Clear 8251 buffer
+    ENDIF
         ld a, b
         or c
         ret z
