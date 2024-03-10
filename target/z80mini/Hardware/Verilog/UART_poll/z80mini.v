@@ -15,6 +15,7 @@ module z80mini(
 	wire [7:0] do;
 	wire [7:0] int_vec;
 	
+	wire vid_nwr;
 	wire map_cs;
 	wire ext_cs;
 	wire ps2_cs;
@@ -50,7 +51,9 @@ module z80mini(
 	assign nWAIT = 1'bz;
 		
 	assign nCONCS = ~(nIORQ == 0 && nM1 == 1 && A[7:4] == 4'h0 && A[3] == 1'b1); // Port 0x08..0x0f 8251 Select
-
+//	assign nCONCS = nIORQ | ~nM1 | |A[7:4] | ~A[3]; // Port 0x08..0x0f 8251 Select
+	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && EXT_A[5:4] == 2'b01); //hardwire 256K VRAM to 0x040000..0x08FFFF
+//	assign vid_nwr = nMREQ | nWR | EXT_A[5] | ~EXT_A[4]; //hardwire 256K VRAM to 0x040000..0x08FFFF
 	assign ext_cs = (A[7:4] == 4'hD) && (A[1:0] == 2'b01);
 	assign ps2_cs = (A[7:4] == 4'hE); // [0xE0..EF]
 	assign map_cs = (A[7:4] == 4'hF); // [0xF0..F3]...[0xFC..FF]
@@ -101,7 +104,7 @@ module z80mini(
 	assign EXT_A[5:0] = mapper[A[15:14]][5:0];
 
 	assign nROMCS = nMREQ | |EXT_A[5:4];	//hardwire 256K ROM to 0x000000..0x03FFFF exactly. No mirrors!
-	assign nRAMCS = nMREQ | ~EXT_A[5];		//hardwire 512K RAM to 0x080000..0x08FFFF
+	assign nRAMCS = nMREQ | ~EXT_A[5];		//hardwire 512K RAM to 0x080000..0x0FFFFF
 
 	assign nNMI = 1'bz;
 	//assign nINT = PS2_irq | CONIRQ ? 1'b0 : 1'bz;
@@ -116,7 +119,7 @@ module z80mini(
 	assign EXT_P[6] = scl ? 1'bz : 1'b0;	// I2C SCL
 	assign EXT_P[7] = 1'bz;						// PS/2 Clock input
 
-	assign RS = 1'b0;
+	assign RS = vid_nwr; //1'b0;
 	assign RW = 1'b0;
 	assign E = 1'b0;
 	
