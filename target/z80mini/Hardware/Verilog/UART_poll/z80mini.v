@@ -103,8 +103,8 @@ module z80mini(
 
 	assign EXT_A[5:0] = mapper[A[15:14]][5:0];
 
-	assign nROMCS = nMREQ | |EXT_A[5:4];	//hardwire 256K ROM to 0x000000..0x03FFFF exactly. No mirrors!
-	assign nRAMCS = nMREQ | ~EXT_A[5];		//hardwire 512K RAM to 0x080000..0x0FFFFF
+	assign nROMCS = nMREQ || |EXT_A[5:4];	//hardwire 256K ROM to 0x000000..0x03FFFF exactly. No mirrors!
+	assign nRAMCS = nMREQ || ~EXT_A[5];		//hardwire 512K RAM to 0x080000..0x0FFFFF
 
 	assign nNMI = 1'bz;
 	//assign nINT = PS2_irq | CONIRQ ? 1'b0 : 1'bz;
