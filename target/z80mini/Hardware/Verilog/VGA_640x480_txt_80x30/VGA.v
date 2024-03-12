@@ -25,52 +25,36 @@ module VGA
 	reg [14:0] cpu_addr;
 	reg [7:0] cpu_data;
 
-	reg div;
+	reg div = 1'b0;
 	
 	localparam
-		h_visible = 640,	h_front_porch = 16,	h_sync_pulse = 96,	h_back_porch = 48,	h_max = 10'd800,
-		v_visible = 480,	v_front_porch = 10,	v_sync_pulse = 2,		v_back_porch = 33,	v_max = 10'd525,
-		shift = 8;
+		h_visible = 640,	h_front_porch = 16,	h_sync_pulse = 96,	h_back_porch = 48,	h_max = 10'd800,	hshift = 8,
+		v_visible = 480,	v_front_porch = 10,	v_sync_pulse = 2,		v_back_porch = 33,	v_max = 10'd525,	vshift = 0;
 
-//	always @(posedge CLK_50) begin
-//		if (~CPU_nWR) begin
-//			cpu_addr <= CPU_A; cpu_data <= CPU_D;
-//		end
-//		if (div == 1'b0) begin
-//			X <= X == h_max - 10'd1 ? 10'd0 : (X + 10'd1);
-//			Y <= X == h_max - 10'd1 ? (Y == v_max - 10'd1 ? 10'd0 : Y + 10'd1) : Y;
-////			char_out[7:0] <= ~|X[2:0] ? char[7:0] : {char_out[6:0], 1'b0};
-//			char_out[7:0] <= ~|X[2:0] ? char[7:0] : char_out[7:0];
-//			attr_out[7:0] <= ~|X[2:0] ? attr[7:0] : attr_out[7:0];
-//		end else begin
-//			case (X[2:0])
-//			1, 5	: char[7:0] <= RAM_D;
-//			3		: attr[7:0] <= RAM_D;
-//			endcase
-//		end
-//		div <= ~div;
-//	end
-
-	reg [1:0] wrtr;
-	reg wr_valid;
+	reg [1:0] wr_valid = 2'b00; //????
 
 	always @(posedge CLK_50) begin
 		if (~div) begin
-			wrtr [1:0] <= {wrtr [0], CPU_nWR};
-			if (wrtr [1:0] == 2'b01) begin
-				cpu_addr <= CPU_A; cpu_data <= CPU_D; wr_valid <= 1'd1;
-			end
+
 			X <= X == h_max - 10'd1 ? 10'd0 : (X + 10'd1);
 			Y <= X == h_max - 10'd1 ? (Y == v_max - 10'd1 ? 10'd0 : Y + 10'd1) : Y;
+			
+			case (wr_valid)
+			0 : wr_valid <= CPU_nWR ? wr_valid : 2'd1;
+			1 : begin wr_valid <= 2'd2; cpu_addr <= CPU_A; cpu_data <= CPU_D; end
+			2 : wr_valid <= |X[2:0] ? wr_valid : 2'd3;
+			3 : wr_valid <= |X[2:0] ? wr_valid : 2'd0;
+			endcase
+
 			case (X[2:0])
-			0		: wr_valid <= 1'd0;
 			1, 5	: char[7:0] <= RAM_D;
 			3		: attr[7:0] <= RAM_D;
 			7		: begin
 						char_out[7:0] <= char[7:0];
 						attr_out[7:0] <= attr[7:0];
-						end
+					end
 			endcase
+
 		end
 		div <= ~div;
 	end
@@ -78,24 +62,21 @@ module VGA
 	
 	wire window = 1'b0;
 	wire [1:0] charset = 2'b00;
+	wire ram_we = (X[2:1] == 2'd3 && &wr_valid[1:0]);
 	
-	assign RAM_A[14:0] = X[2:1] == 3'd3 ? cpu_addr : X[2] ? {charset[1], 1'b1, charset[1], char[7:0], Y[3:0]} : {window, 1'b0, X[1], Y[8:4], X[9:3]}; 
-	assign RAM_D = X[2:1] == 3'd3 ? cpu_data : 8'b_zzzz_zzzz;
-	assign RAM_nWE = ~(X[2:1] == 3'd3 && wr_valid);
-	assign RAM_nOE = (X[2:1] == 3'd3 && wr_valid);
-	
-	assign H_Sync = (X < h_visible + h_front_porch + shift)	|| (X >= h_max - h_back_porch + shift);
-	assign V_Sync = (Y < v_visible + v_front_porch)				|| (Y >= v_max - v_back_porch);
+	assign RAM_A[14:0] = ram_we ? cpu_addr : X[2] ? {charset[1], 1'b1, charset[1], char[7:0], Y[3:0]} : {window, 1'b0, X[1], Y[8:4], X[9:3]}; 
+	assign RAM_D = ram_we ? cpu_data : 8'b_zzzz_zzzz;
+	assign RAM_nWE = ~ram_we;
+	assign RAM_nOE = ram_we;
 
-	wire visible = (X >= shift) && (X < h_visible + shift) && (Y < v_visible);
+	assign H_Sync = (X < h_visible + h_front_porch + hshift)	|| (X >= h_max - h_back_porch + hshift);
+	assign V_Sync = (Y < v_visible + v_front_porch + vshift) || (Y >= v_max - v_back_porch + vshift);
+
+	wire visible =	(X >= hshift) && (X < h_visible + hshift) && 
+						(Y >= vshift) && (Y < v_visible + vshift);
 
 
 	// -----------------------------------------------------------------------------
-//	assign VGA_R = visible && char_out[7] ? attr_out[0] : attr_out[4];
-//	assign VGA_B = visible && char_out[7] ? attr_out[1] : attr_out[5];
-//	assign VGA_G = visible && char_out[7] ? attr_out[2] : attr_out[6];
-//	assign VGA_I = visible && char_out[7] ? attr_out[3] : attr_out[7];
-
 	assign VGA_R = visible && char_out[~X[2:0]] ? attr_out[0] : attr_out[4];
 	assign VGA_B = visible && char_out[~X[2:0]] ? attr_out[1] : attr_out[5];
 	assign VGA_G = visible && char_out[~X[2:0]] ? attr_out[2] : attr_out[6];
