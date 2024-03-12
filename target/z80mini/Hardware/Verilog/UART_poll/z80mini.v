@@ -27,7 +27,7 @@ module z80mini(
 	wire CPUCLK0;
 
 	reg [5:0] mapper [0:3];
-	
+	reg div;
 	
 	frequency_generator fg0 (
 		.clock_in(CLK50MHz),
@@ -92,6 +92,7 @@ module z80mini(
 			mapper[2][5:0] <= 8'h21; // 0x084000
 			mapper[3][5:0] <= 8'h22; // 0x088000
 		end else begin
+			div <= ~div;
 			if (CPUCLK0 && (nIORQ == 0 && nWR == 0 && map_cs)) begin
 				mapper[A[1:0]][5:0] <= D[5:0]; // mapper write addressed by 2 LSB of CPU address bus 
 			end
@@ -121,6 +122,6 @@ module z80mini(
 
 	assign RS = vid_nwr; //1'b0;
 	assign RW = 1'b0;
-	assign E = 1'b0;
+	assign E = div; //1'b0;
 	
 endmodule

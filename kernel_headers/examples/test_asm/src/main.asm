@@ -31,6 +31,29 @@ _start:
 	ld bc, 0x1000
     ldir
 
+    ld hl, 0x9fff
+    ld (hl), 0x0F
+
+	ld hl, _text1
+    ld de, 0x8000 + 2048
+	ld bc, _text - _text1
+    ldir
+
+    ld hl, 0x9fff
+    ld (hl), 0xE2
+
+	ld hl, _text1
+    ld de, 0x8000 + 2048 + _text - _text1
+	ld bc, _text - _text1
+    ldir
+
+    ld hl, 0x9fff
+    ld (hl), 0x5B
+
+	ld hl, _text1
+    ld de, 0x8000 + 2048 + 256
+	ld bc, _text - _text1
+    ldir
 
 _end:
     ; We MUST execute EXIT() syscall at the end of any program.
@@ -42,6 +65,8 @@ _end:
 
     ; Define a label before and after the message, so that we can get the length of the string
     ; thanks to `_message_end - _message`.
+_text1: 
+    DEFM "Auto attribute test  "
 _text: 
     DEFM "01234567890123456789012345678901234567890123456789012345678901234567890123456789"
     DEFS 48, 0xFF
