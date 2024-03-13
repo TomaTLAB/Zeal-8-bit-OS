@@ -310,13 +310,9 @@ _video_ioctl_clear_screen:
         ld (de), a
         ;clear frame buffer
         xor a
-        ld de, IO_VIDEO_VIRT_TEXT_VRAM
-        ld hl, 0x1000
-_video_ioctl_clear_screen_01:
-        ld (de), a
-        inc de
-        dec hl
-        jr nz, _video_ioctl_clear_screen_01
+        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
+        ld bc, 0x1000
+        call _video_vram_set
         ; Screen has been cleared, reset the scrolling value
 ;        xor a
         ld (scroll_count), a
@@ -341,16 +337,16 @@ _video_ioctl_clear_screen_01:
         ;   HL - Address of the memory to set
         ;   BC - Size of the memory
         ;   A - Data to write to it
-;_video_vram_set:
-;        ld d, a
-;_video_vram_set_loop:
-;        ld (hl), d
-;        inc hl
-;        dec bc
-;        ld a, b
-;        or c
-;        jp nz, _video_vram_set_loop
-;        ret
+_video_vram_set:
+        ld d, a
+_video_vram_set_loop:
+        ld (hl), d
+        inc hl
+        dec bc
+        ld a, b
+        or c
+        jp nz, _video_vram_set_loop
+        ret
 
 
 _video_ioctl_cmd_table:
