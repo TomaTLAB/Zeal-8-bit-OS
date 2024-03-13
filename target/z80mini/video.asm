@@ -21,26 +21,37 @@
         ; Initialize the video driver.
         ; This is called only once, at boot up
 video_init:
+
+        ; Load FONT
+        call video_map_start
+        ld hl, _rom_font
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM + 0x2000
+        ld bc, 0x1000
+        ldir
+        call video_map_end
+
         ; Initialize the non-0 values here, others are already set to 0 because
         ; they are in the BSS section, including cursor_y and cursor_x.
-        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
-        ld (cursor_pos), hl
+;        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
+;        ld (cursor_pos), hl
 
         ld a, 1 << SCREEN_SCROLL_ENABLED | 1 << SCREEN_TEXT_640
         ld (screen_flags), a
 
-        ld a, TEXT_MODE_640
-        out (IO_VIDEO_SET_MODE), a
+        ;ld a, TEXT_MODE_640
+        ;out (IO_VIDEO_SET_MODE), a
 
-        xor a
-        out (IO_VIDEO_SCROLL_Y), a
+        ;xor a
+        ;out (IO_VIDEO_SCROLL_Y), a
 
         ld a, DEFAULT_CHARS_COLOR
-        out (IO_VIDEO_SET_COLOR), a
+        ;out (IO_VIDEO_SET_COLOR), a
         ld (chars_color), a
 
         ld a, DEFAULT_CHARS_COLOR_INV
         ld (invert_color), a
+
+        call _video_ioctl_clear_screen
 
         IF CONFIG_TARGET_STDOUT_VIDEO
         ; Set it at the default stdout
@@ -81,10 +92,16 @@ video_deinit:
 video_open:
         ; Restore the color to default. In the future, we'll also have to restore
         ; the default color palette and charset.
+        call video_map_start
         ld a, DEFAULT_CHARS_COLOR
         ld (chars_color), a
         ; Let video chip save this default color
-        out (IO_VIDEO_SET_COLOR), a
+        ;out (IO_VIDEO_SET_COLOR), a
+        ;set attribute
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM + 0x1FFF ; point to invisible
+        ld (de), a
+        call video_map_end
+        xor a 
         ret
 
         ; Perform an I/O requested by the user application.
@@ -130,7 +147,7 @@ _video_ioctl_set_attr:
         ; Get current mode area size, DE represent a pointer to area_t structure
 _video_ioctl_get_area:
         call zos_sys_remap_de_page_2
-        ; Only support 80x40 (640x480px) text mode at the moment
+        ; Only support 80x30 (640x480px) text mode at the moment
         ex de, hl
         ld (hl), IO_VIDEO_640480_X_MAX
         inc hl
@@ -202,8 +219,10 @@ _video_ioctl_set_cursor_y_valid:
         sub c
 _video_ioctl_set_cursor_x:
         ld (cursor_y), a
-        ; Store Y in L
-        ld l, a
+        rrca
+        ; Store rolled Y in H
+        ld h, a
+ 
         ; Do the same adjustment for X
         ld a, d
         cp b
@@ -212,24 +231,18 @@ _video_ioctl_set_cursor_x:
         dec a
 _video_ioctl_set_cursor_x_valid:
         ld (cursor_x), a
-        ld d, a
-        ; D and L contain respectively X and Y coordinates now
-        ; HL = Y * 80 (IO_VIDEO_X_MAX) + X
-        ; HL = Y * (64 + 16) + X
-        ld h, 0
-        add hl, hl  ; * 2
-        add hl, hl  ; * 4
-        add hl, hl  ; * 8
-        add hl, hl  ; * 16
-        push hl
-        add hl, hl  ; * 32
-        add hl, hl  ; * 64
-        ld a, d ; A = position X
-        pop de
-        add hl, de
-        ld d, IO_VIDEO_VIRT_TEXT_VRAM >> 8
-        ld e, a
-        add hl, de
+        ; Store X in L
+        ld l, a
+        ld a, h
+        or a, 0b01111111
+        or a, l
+        ld l, a
+        res 7, h
+;        ld a, h
+;        add a, IO_VIDEO_VIRT_TEXT_VRAM >> 8
+;        ld h, a
+        set 6, h ;We know it always mapped to page 1
+
         ld (cursor_pos), hl
         call video_show_cursor
         call video_map_end
@@ -262,7 +275,7 @@ _video_ioctl_set_colors:
         rlca
         or e
         ld (chars_color), a
-        out (IO_VIDEO_SET_COLOR), a
+ ;       out (IO_VIDEO_SET_COLOR), a
         ; Save the inverted colors for the cursor
         rlca
         rlca
@@ -273,7 +286,7 @@ _video_ioctl_set_colors:
         ld e, a
         call video_map_start
         ld hl, (cursor_pos)
-        set 5, h
+        set 4, h
         ld (hl), e
         call video_map_end
         ; Success
@@ -290,33 +303,35 @@ _video_ioctl_set_colors:
         ;   A, BC, DE, HL
 _video_ioctl_clear_screen:
         call video_map_start
-        call video_hide_cursor
-        ; Clear the screen characters by writing 0 to the VRAM text part
-        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
-        ld bc, IO_VIDEO_MAX_CHAR
-        xor a
-        push bc
-        call _video_vram_set
-        ; Clear the attributes/colors part
+;        call video_hide_cursor
+          ;set attribute
         ld a, (chars_color)
-        ld hl, IO_VIDEO_VIRT_TEXT_VRAM + 0x2000
-        pop bc
-        call _video_vram_set
-        ; Screen has been cleared, reset the scrolling value
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM + 0x1000
+        ld (de), a
+        ;clear frame buffer
         xor a
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM
+        ld hl, 0x1000
+_video_ioctl_clear_screen_01:
+        ld (de), a
+        inc de
+        dec hl
+        jr nz, _video_ioctl_clear_screen_01
+        ; Screen has been cleared, reset the scrolling value
+;        xor a
         ld (scroll_count), a
-        out (IO_VIDEO_SCROLL_Y), a
+;        out (IO_VIDEO_SCROLL_Y), a
         ; Reset the absolute cursor to position 0
         ld hl, IO_VIDEO_VIRT_TEXT_VRAM
         ld (cursor_pos), hl
         ; Show the cursor
         ld a, (invert_color)
-        set 5, h
+        set 4, h
         ld (hl), a
         ; Save the new (X,Y) position
         ld hl, 0
         ld (cursor_x), hl
-        ; Show the cursor at its new position
+        ld (cursor_y), hl
         call video_map_end
         xor a
         ret
@@ -326,16 +341,16 @@ _video_ioctl_clear_screen:
         ;   HL - Address of the memory to set
         ;   BC - Size of the memory
         ;   A - Data to write to it
-_video_vram_set:
-        ld d, a
-_video_vram_set_loop:
-        ld (hl), d
-        inc hl
-        dec bc
-        ld a, b
-        or c
-        jp nz, _video_vram_set_loop
-        ret
+;_video_vram_set:
+;        ld d, a
+;_video_vram_set_loop:
+;        ld (hl), d
+;        inc hl
+;        dec bc
+;        ld a, b
+;        or c
+;        jp nz, _video_vram_set_loop
+;        ret
 
 
 _video_ioctl_cmd_table:
@@ -459,7 +474,7 @@ video_show_cursor_color:
         jr z, _video_show_cursor_check_scroll
 _video_show_cursor_valid:
         ld hl, (cursor_pos)
-        set 5, h
+        set 4, h ; point to attr
         ld (hl), d
         ret
 _video_show_cursor_check_scroll:
@@ -818,7 +833,7 @@ scroll_screen_if_needed:
         xor a
 _scroll_screen_no_roll:
         ld (scroll_count), a
-        out (IO_VIDEO_SCROLL_Y), a
+        ;out (IO_VIDEO_SCROLL_Y), a
         jp erase_line
 
 
@@ -836,7 +851,7 @@ scroll_set:
         jr scroll_set
 _scroll_set_correct:
         ld (scroll_count), a
-        out (IO_VIDEO_SCROLL_Y), a
+        ;out (IO_VIDEO_SCROLL_Y), a
         ret
 
 
@@ -858,6 +873,9 @@ _erase_line_loop:
         djnz _erase_line_loop
         pop bc
         ret
+
+_rom_font:
+    INCBIN "font.bin"
 
 
         SECTION DRIVER_BSS

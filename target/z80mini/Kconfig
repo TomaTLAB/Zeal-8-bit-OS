@@ -126,6 +126,32 @@ menu "Z80mini configuration"
             Import the video driver in the kernel compilation. If this option is disabled, the UART will become the default
             standard output.
 
+    menu "Video driver configuration"
+    depends on TARGET_ENABLE_VIDEO
+
+    config TEXT_ADDRESS
+        hex "Text characters area physical address"
+        default 0x40000
+        range 0x40000 0x7C000
+        help
+            Address where the TEXT area of video RAM starts.
+
+    config ATTR_ADDRESS
+        hex "Text attributes area physical address"
+        default 0x41000
+        range 0x40000 0x7C000
+        help
+            Address where the ATTRIBUTE area of video RAM starts.
+
+    config FONT_ADDRESS
+        hex "Loadable font area physical address"
+        default 0x42000
+        range 0x40000 0x7C000
+        help
+            Address where the loadable FONT area of video RAM starts.
+
+    endmenu
+
     choice TARGET_STDOUT
         prompt "Standard output driver"
         default TARGET_STDOUT_VIDEO if TARGET_ENABLE_VIDEO

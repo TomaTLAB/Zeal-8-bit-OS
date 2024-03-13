@@ -63,12 +63,12 @@ interrupt_pio_handler:
         ; this interrupt, so all pins shall be checked.
         in a, (IO_PIO_SYSTEM_DATA)
 
-        IF CONFIG_TARGET_ENABLE_VIDEO
+;        IF CONFIG_TARGET_ENABLE_VIDEO
         ; Check if a V-blank interrupt occurred
-        bit IO_VBLANK_PIN, a
+;        bit IO_VBLANK_PIN, a
         ; All the bits are active-low!
-        call z, video_vblank_isr
-        ENDIF ; CONFIG_TARGET_ENABLE_VIDEO
+;        call z, video_vblank_isr
+;        ENDIF ; CONFIG_TARGET_ENABLE_VIDEO
 
         bit IO_KEYBOARD_PIN, a
         call z, keyboard_interrupt_handler
