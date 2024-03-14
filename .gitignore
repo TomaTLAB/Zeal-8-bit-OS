@@ -1,7 +1,7 @@
-kernel_headers/examples/test_asm
-target/z80mini/Hardvare/Verilog/**/db
-target/z80mini/Hardvare/Verilog/**/incremental_db
-target/z80mini/Hardvare/Verilog/**/output_files
+kernel_headers/examples/test_asm/
+target/z80mini/Hardvare/Verilog/**/db/
+target/z80mini/Hardvare/Verilog/**/incremental_db/
+target/z80mini/Hardvare/Verilog/**/output_files/
 *.bak
 *.Identifier
 # Configuration and auto-generated files
