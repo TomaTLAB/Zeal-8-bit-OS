@@ -26,7 +26,7 @@ module z80mini(
 	wire PS2_irq;
 	wire CPUCLK0;
 
-	reg [5:0] mapper [0:3];
+	reg [7:0] mapper [0:3];
 	reg div;
 	
 	frequency_generator fg0 (
@@ -52,8 +52,9 @@ module z80mini(
 		
 	assign nCONCS = ~(nIORQ == 0 && nM1 == 1 && A[7:4] == 4'h0 && A[3] == 1'b1); // Port 0x08..0x0f 8251 Select
 //	assign nCONCS = nIORQ | ~nM1 | |A[7:4] | ~A[3]; // Port 0x08..0x0f 8251 Select
-	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && EXT_A[5:4] == 2'b01); //hardwire 256K VRAM to 0x040000..0x08FFFF
-//	assign vid_nwr = nMREQ | nWR | EXT_A[5] | ~EXT_A[4]; //hardwire 256K VRAM to 0x040000..0x08FFFF
+//	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && EXT_A[5:4] == 2'b01); //hardwire 256K VRAM to 0x040000..0x08FFFF
+	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && &EXT_A[5:0]); //hardwire 4K VRAM to 0x0FC000..0x0FFFFF
+//	assign vid_nwr = nMREQ == 0 | nWR == 0 | ~&EXT_A[5:0]; //hardwire 4K VRAM to 0x0FC000..0x0FFFFF
 	assign ext_cs = (A[7:4] == 4'hD) && (A[1:0] == 2'b01);
 	assign ps2_cs = (A[7:4] == 4'hE); // [0xE0..EF]
 	assign map_cs = (A[7:4] == 4'hF); // [0xF0..F3]...[0xFC..FF]
@@ -87,14 +88,14 @@ module z80mini(
 
    always @(posedge CLK50MHz) begin
 		if (~nRESET) begin
-			mapper[0][5:0] <= 8'h00; // 0x000000 
-			mapper[1][5:0] <= 8'h20; // 0x080000
-			mapper[2][5:0] <= 8'h21; // 0x084000
-			mapper[3][5:0] <= 8'h22; // 0x088000
+			mapper[0][7:0] <= 8'h00; // 0x000000 
+			mapper[1][7:0] <= 8'h20; // 0x080000
+			mapper[2][7:0] <= 8'h21; // 0x084000
+			mapper[3][7:0] <= 8'h22; // 0x088000
 		end else begin
 			div <= ~div;
 			if (CPUCLK0 && (nIORQ == 0 && nWR == 0 && map_cs)) begin
-				mapper[A[1:0]][5:0] <= D[5:0]; // mapper write addressed by 2 LSB of CPU address bus 
+				mapper[A[1:0]][7:0] <= D[7:0]; // mapper write addressed by 2 LSB of CPU address bus 
 			end
 			if (CPUCLK0 && (nIORQ == 0 && nWR == 0 && ext_cs)) begin
 				sda <= D[0]; scl <= D[1]; s_tx <= D[4];
