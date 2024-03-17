@@ -696,17 +696,13 @@ print_char:
         jr z, _print_char_backspace
         ; Tabulation is consider a space. Do nothing special.
         ; Get the cursor position
-        push af
-        call _video_adjust_cursor
-        pop af
         ld hl, (cursor_pos)
         ld (hl), a              ; Write the ASCII character to VRAM
         inc hl
         ld (cursor_pos), hl     ; Save incremented position
         ; Now, we also need to increment the position-on-current-line byte
-        ld hl, cursor_x
-        inc (hl)
-        ret
+        jr _video_adjust_cursor
+
 _print_char_newline:
         ; Before resetting cursor_x, let's make cursor_pos point to next line!
         ; Perform cursor_pos += IO_VIDEO_X_PHY - cursor_x
@@ -718,24 +714,18 @@ _print_char_newline:
         ld (cursor_pos), hl
         ld hl, cursor_x
         jr _video_force_adjust_cursor
+
 _print_char_carriage_return:
         ; This is similar to newline, expect that we subtract what has been reached
         ; cursor_x, instead of adding remaining chars
         ld hl, cursor_x
-
- ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        ld b, (hl)
- ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         ; Reset cursor_x now as we are currently pointing to it
         ld (hl), 0
-        neg
-        ld hl, (cursor_pos)
-        ; We can add A to HL but we need to decrement H first as A is negative
-        dec h
-        ADD_HL_A()
-        ld (cursor_pos), hl
+        ld a, (cursor_pos) ; get low byte (7 low bit - x-pos) of absolute cursor
+        and a, 0b10000000 ; reset it to 0
+        ld (cursor_pos), a ; now save
         ret
+
 _print_char_backspace:
         ; It is unlikely that X is 0 and even more unlikely that Y is too
         ; so save some time for the "best" case and decrement HL here
@@ -770,12 +760,14 @@ _print_char_backspace:
         ret
 
 _video_adjust_cursor:
-        ; Check if the current X is out of bound
         ld hl, cursor_x
+        ; Check if the current X is out of bound
         ld a, (hl)
-        cp IO_VIDEO_X_MAX
+        cp IO_VIDEO_X_MAX - 1
+        jr z, _video_force_adjust_cursor
         ; Nothing special in the case where X has not reached the end of the screen
-        ret nz
+        inc (hl)
+        ret
 _video_force_adjust_cursor:
         ; X reached the end of the line, reset it
         ld (hl), 0

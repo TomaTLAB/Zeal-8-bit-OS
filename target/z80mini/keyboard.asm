@@ -11,7 +11,7 @@
         INCLUDE "stdout_h.asm"
 
         DEFC KEYBOARD_FIFO_SIZE = 16
-        DEFC KEYBOARD_INTERNAL_BUFFER_SIZE = 80
+        DEFC KEYBOARD_INTERNAL_BUFFER_SIZE = 128
 
         EXTERN zos_sys_reserve_page_1
         EXTERN zos_sys_restore_pages

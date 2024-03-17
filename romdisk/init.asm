@@ -197,7 +197,7 @@ _promptlen_loop_end:
         SECTION BSS
 curdir: DEFS PATH_MAX + 1
 curdir_len: DEFS 2
-bigbuffer: DEFS 81
+bigbuffer: DEFS 129
 bigbuffer_end:
         ; Allocate a few more bytes so that we can append some characters
         DEFS 2
