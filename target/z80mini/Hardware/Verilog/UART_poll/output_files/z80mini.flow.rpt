@@ -1,5 +1,5 @@
 Flow report for z80mini
-Sat Mar 16 22:14:27 2024
+Mon Mar 18 02:08:33 2024
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
 
 
@@ -40,7 +40,7 @@ applicable agreement for further details.
 +------------------------------------------------------------------------------+
 ; Flow Summary                                                                 ;
 +---------------------------+--------------------------------------------------+
-; Flow Status               ; Successful - Sat Mar 16 22:14:23 2024            ;
+; Flow Status               ; Successful - Mon Mar 18 02:08:28 2024            ;
 ; Quartus II 64-Bit Version ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Full Version ;
 ; Revision Name             ; z80mini                                          ;
 ; Top-level Entity Name     ; z80mini                                          ;
@@ -57,7 +57,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/16/2024 22:14:12 ;
+; Start date & time ; 03/18/2024 02:08:19 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; z80mini             ;
 +-------------------+---------------------+
@@ -69,7 +69,7 @@ applicable agreement for further details.
 ; Assignment Name                        ; Value                          ; Default Value ; Entity Name ; Section Id ;
 +----------------------------------------+--------------------------------+---------------+-------------+------------+
 ; AUTO_RESOURCE_SHARING                  ; On                             ; Off           ; --          ; --         ;
-; COMPILER_SIGNATURE_ID                  ; 37466543555466.171061645217540 ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID                  ; 37466543555466.171071689912628 ; --            ; --          ; --         ;
 ; FITTER_EFFORT                          ; Standard Fit                   ; Auto Fit      ; --          ; --         ;
 ; MAX7000_OPTIMIZATION_TECHNIQUE         ; Area                           ; Speed         ; --          ; --         ;
 ; OPTIMIZE_HOLD_TIMING                   ; Off                            ; --            ; --          ; --         ;
@@ -86,10 +86,10 @@ applicable agreement for further details.
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Analysis & Synthesis      ; 00:00:04     ; 1.0                     ; 4588 MB             ; 00:00:01                           ;
-; Fitter                    ; 00:00:03     ; 1.0                     ; 4797 MB             ; 00:00:01                           ;
-; Assembler                 ; 00:00:02     ; 1.0                     ; 4538 MB             ; 00:00:01                           ;
+; Fitter                    ; 00:00:01     ; 1.0                     ; 4797 MB             ; 00:00:01                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 4538 MB             ; 00:00:01                           ;
 ; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 4569 MB             ; 00:00:01                           ;
-; Total                     ; 00:00:12     ; --                      ; --                  ; 00:00:04                           ;
+; Total                     ; 00:00:09     ; --                      ; --                  ; 00:00:04                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

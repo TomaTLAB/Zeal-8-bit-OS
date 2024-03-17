@@ -1,5 +1,5 @@
 Analysis & Synthesis report for z80mini
-Sat Mar 16 22:14:16 2024
+Mon Mar 18 02:08:22 2024
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
 
 
@@ -40,7 +40,7 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                   ;
 +-----------------------------+--------------------------------------------------+
-; Analysis & Synthesis Status ; Successful - Sat Mar 16 22:14:16 2024            ;
+; Analysis & Synthesis Status ; Successful - Mon Mar 18 02:08:22 2024            ;
 ; Quartus II 64-Bit Version   ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Full Version ;
 ; Revision Name               ; z80mini                                          ;
 ; Top-level Entity Name       ; z80mini                                          ;
@@ -165,8 +165,8 @@ applicable agreement for further details.
 ; Parallel expanders   ; 7                    ;
 ; Maximum fan-out node ; CLK50MHz             ;
 ; Maximum fan-out      ; 64                   ;
-; Total fan-out        ; 1083                 ;
-; Average fan-out      ; 6.30                 ;
+; Total fan-out        ; 1111                 ;
+; Average fan-out      ; 6.46                 ;
 +----------------------+----------------------+
 
 
@@ -216,7 +216,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
-    Info: Processing started: Sat Mar 16 22:14:11 2024
+    Info: Processing started: Mon Mar 18 02:08:18 2024
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off z80mini -c z80mini
 Info: Parallel Compilation has detected 48 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 16 of the 16 physical processors detected instead.
 Warning: Verilog HDL Declaration warning at z80mini.v(15): "do" is SystemVerilog-2005 keyword
@@ -245,13 +245,14 @@ Info: Instantiated megafunction "frequency_generator:fg0|lpm_counter:con_counter
     Info: Parameter "LPM_TYPE" = "LPM_COUNTER"
 Warning: The following nodes have both tri-state and non-tri-state drivers
     Warning: Inserted always-enabled tri-state buffer between "RS" and its non-tri-state driver.
+    Warning: Inserted always-enabled tri-state buffer between "RW" and its non-tri-state driver.
     Warning: Inserted always-enabled tri-state buffer between "E" and its non-tri-state driver.
 Warning: The following tri-state nodes are fed by constants
-    Warning: The pin "RW" is fed by GND
     Warning: The pin "EXT_P[0]" is fed by GND
     Warning: The pin "EXT_P[1]" is fed by GND
 Warning: TRI or OPNDRN buffers permanently enabled
     Warning: Node "RS~synth"
+    Warning: Node "RW~synth"
     Warning: Node "E~synth"
 Info: Promoted pin-driven signal(s) to global signal
     Info: Promoted clock signal driven by pin "CLK50MHz" to global clock signal
@@ -271,9 +272,9 @@ Info: Implemented 172 device resources after synthesis - the final resource coun
     Info: Implemented 22 bidirectional pins
     Info: Implemented 104 macrocells
     Info: Implemented 7 shareable expanders
-Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 23 warnings
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 24 warnings
     Info: Peak virtual memory: 4588 megabytes
-    Info: Processing ended: Sat Mar 16 22:14:16 2024
+    Info: Processing ended: Mon Mar 18 02:08:23 2024
     Info: Elapsed time: 00:00:05
     Info: Total CPU time (on all processors): 00:00:01
 

@@ -16,6 +16,7 @@ module z80mini(
 	wire [7:0] int_vec;
 	
 	wire vid_nwr;
+	wire vid_nrd;
 	wire map_cs;
 	wire ext_cs;
 	wire ps2_cs;
@@ -51,10 +52,8 @@ module z80mini(
 	assign nWAIT = 1'bz;
 		
 	assign nCONCS = ~(nIORQ == 0 && nM1 == 1 && A[7:4] == 4'h0 && A[3] == 1'b1); // Port 0x08..0x0f 8251 Select
-//	assign nCONCS = nIORQ | ~nM1 | |A[7:4] | ~A[3]; // Port 0x08..0x0f 8251 Select
-//	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && EXT_A[5:4] == 2'b01); //hardwire 256K VRAM to 0x040000..0x08FFFF
 	assign vid_nwr = ~(nMREQ == 0 && nWR == 0 && &EXT_A[5:0]); //hardwire 4K VRAM to 0x0FC000..0x0FFFFF
-//	assign vid_nwr = nMREQ == 0 | nWR == 0 | ~&EXT_A[5:0]; //hardwire 4K VRAM to 0x0FC000..0x0FFFFF
+	assign vid_nrd = ~(nMREQ == 0 && nRD == 0 && &EXT_A[5:0]); //hardwire 4K VRAM to 0x0FC000..0x0FFFFF
 	assign ext_cs = (A[7:4] == 4'hD) && (A[1:0] == 2'b01);
 	assign ps2_cs = (A[7:4] == 4'hE); // [0xE0..EF]
 	assign map_cs = (A[7:4] == 4'hF); // [0xF0..F3]...[0xFC..FF]
@@ -122,7 +121,7 @@ module z80mini(
 	assign EXT_P[7] = 1'bz;						// PS/2 Clock input
 
 	assign RS = vid_nwr; //1'b0;
-	assign RW = 1'b0;
+	assign RW = vid_nrd; //1'b0;
 	assign E = div; //1'b0;
 	
 endmodule

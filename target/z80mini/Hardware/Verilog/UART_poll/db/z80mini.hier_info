@@ -55,6 +55,7 @@ nIORQ => comb.IN0
 nIORQ => oe.IN0
 nIORQ => D.IN0
 nWR => vid_nwr.IN0
+nRD => vid_nrd.IN0
 nRD => comb.IN0
 nRD => oe.IN1
 nM1 => nCONCS.IN1
@@ -80,7 +81,7 @@ EXT_A[3] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
 EXT_A[4] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
 EXT_A[5] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
 RS <> RS
-RW <> <GND>
+RW <> RW
 E <> E
 EXT_P[0] <> <GND>
 EXT_P[1] <> <GND>
