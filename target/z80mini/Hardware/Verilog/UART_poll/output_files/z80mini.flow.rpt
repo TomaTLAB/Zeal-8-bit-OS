@@ -1,0 +1,117 @@
+Flow report for z80mini
+Sat Mar 16 22:14:27 2024
+Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Flow Summary
+  3. Flow Settings
+  4. Flow Non-Default Global Settings
+  5. Flow Elapsed Time
+  6. Flow OS Summary
+  7. Flow Log
+  8. Flow Messages
+  9. Flow Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++------------------------------------------------------------------------------+
+; Flow Summary                                                                 ;
++---------------------------+--------------------------------------------------+
+; Flow Status               ; Successful - Sat Mar 16 22:14:23 2024            ;
+; Quartus II 64-Bit Version ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Full Version ;
+; Revision Name             ; z80mini                                          ;
+; Top-level Entity Name     ; z80mini                                          ;
+; Family                    ; MAX7000S                                         ;
+; Device                    ; EPM7128SLC84-15                                  ;
+; Timing Models             ; Final                                            ;
+; Total macrocells          ; 106 / 128 ( 83 % )                               ;
+; Total pins                ; 65 / 68 ( 96 % )                                 ;
++---------------------------+--------------------------------------------------+
+
+
++-----------------------------------------+
+; Flow Settings                           ;
++-------------------+---------------------+
+; Option            ; Setting             ;
++-------------------+---------------------+
+; Start date & time ; 03/16/2024 22:14:12 ;
+; Main task         ; Compilation         ;
+; Revision Name     ; z80mini             ;
++-------------------+---------------------+
+
+
++--------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                   ;
++----------------------------------------+--------------------------------+---------------+-------------+------------+
+; Assignment Name                        ; Value                          ; Default Value ; Entity Name ; Section Id ;
++----------------------------------------+--------------------------------+---------------+-------------+------------+
+; AUTO_RESOURCE_SHARING                  ; On                             ; Off           ; --          ; --         ;
+; COMPILER_SIGNATURE_ID                  ; 37466543555466.171061645217540 ; --            ; --          ; --         ;
+; FITTER_EFFORT                          ; Standard Fit                   ; Auto Fit      ; --          ; --         ;
+; MAX7000_OPTIMIZATION_TECHNIQUE         ; Area                           ; Speed         ; --          ; --         ;
+; OPTIMIZE_HOLD_TIMING                   ; Off                            ; --            ; --          ; --         ;
+; PROJECT_OUTPUT_DIRECTORY               ; output_files                   ; --            ; --          ; --         ;
+; SMART_RECOMPILE                        ; On                             ; Off           ; --          ; --         ;
+; SYNTH_TIMING_DRIVEN_SYNTHESIS          ; Off                            ; --            ; --          ; --         ;
+; USE_LOGICLOCK_CONSTRAINTS_IN_BALANCING ; Off                            ; On            ; --          ; --         ;
++----------------------------------------+--------------------------------+---------------+-------------+------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------+
+; Flow Elapsed Time                                                                                                             ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Analysis & Synthesis      ; 00:00:04     ; 1.0                     ; 4588 MB             ; 00:00:01                           ;
+; Fitter                    ; 00:00:03     ; 1.0                     ; 4797 MB             ; 00:00:01                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 4538 MB             ; 00:00:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 4569 MB             ; 00:00:01                           ;
+; Total                     ; 00:00:12     ; --                      ; --                  ; 00:00:04                           ;
++---------------------------+--------------+-------------------------+---------------------+------------------------------------+
+
+
++----------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                        ;
++---------------------------+------------------+-----------+------------+----------------+
+; Module Name               ; Machine Hostname ; OS Name   ; OS Version ; Processor type ;
++---------------------------+------------------+-----------+------------+----------------+
+; Analysis & Synthesis      ; Abacus           ; Windows 7 ; 6.2        ; x86_64         ;
+; Fitter                    ; Abacus           ; Windows 7 ; 6.2        ; x86_64         ;
+; Assembler                 ; Abacus           ; Windows 7 ; 6.2        ; x86_64         ;
+; TimeQuest Timing Analyzer ; Abacus           ; Windows 7 ; 6.2        ; x86_64         ;
++---------------------------+------------------+-----------+------------+----------------+
+
+
+------------
+; Flow Log ;
+------------
+quartus_map --read_settings_files=on --write_settings_files=off z80mini -c z80mini
+quartus_fit --read_settings_files=off --write_settings_files=off z80mini -c z80mini
+quartus_asm --read_settings_files=off --write_settings_files=off z80mini -c z80mini
+quartus_sta z80mini -c z80mini
+
+
+

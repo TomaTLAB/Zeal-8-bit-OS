@@ -10,10 +10,9 @@
     DEFINE MMU_H
 
     ; Size of the RAM in bytes
-    DEFC MMU_RAM_SIZE = 512 * 1024
-
+    DEFC MMU_RAM_SIZE = CONFIG_KERNEL_RAM_PHYS_SIZE ; 512 * 1024
     ; RAM physical address
-    DEFC MMU_RAM_PHYS_ADDR = 0x80000 ; 512KB
+    DEFC MMU_RAM_PHYS_ADDR = CONFIG_KERNEL_RAM_PHYS_ADDRESS ; 0x80000 ; 512KB
     ; Index of the first RAM page
     DEFC MMU_RAM_PHYS_START_IDX = MMU_RAM_PHYS_ADDR / KERN_MMU_VIRT_PAGES_SIZE
     ; Number of 16KB pages for the RAM: 512KB/16KB
@@ -37,7 +36,7 @@
 
     ; Macro used to map a physical address to a virtual page. Both must be defined at compile time.
     MACRO MMU_MAP_PHYS_ADDR page, address
-        ASSERT(address < 0x100000) ; Max 1MB of physical memory
+        ASSERT(address < 0x3FC000) ; Max 4MB - 16kB of physical memory
         ld a, address >> 14  ; Virtual address are 16 - 2 = 14 bits wide
         out (page), a
     ENDM
@@ -98,10 +97,11 @@
         ld a, CONFIG_KERNEL_RAM_PHYS_ADDRESS >> 14
         out (MMU_PAGE_3), a
         ; Clear the allocated bitmap
-        ld hl, 0xFFFF
         ; At the moment, we know we have only 4 bytes, no need to make a loop
-        ASSERT(MMU_RAM_PHYS_PAGES == 32)
-        ld (mmu_bitmap), hl
+;        ASSERT(MMU_RAM_PHYS_PAGES == 32)
+        ld hl, 0xFFFF
+        ld (mmu_bitmap + 0), hl
+        ld hl, 0x7FFF
         ld (mmu_bitmap + 2), hl
         ; In theory, the stack is not ready, let's take some advance and set it
         ;  in order ot be able to call a function

@@ -149,9 +149,9 @@ _video_ioctl_get_area:
         call zos_sys_remap_de_page_2
         ; Only support 80x30 (640x480px) text mode at the moment
         ex de, hl
-        ld (hl), IO_VIDEO_640480_X_MAX
+        ld (hl), IO_VIDEO_X_MAX
         inc hl
-        ld (hl), IO_VIDEO_640480_Y_MAX
+        ld (hl), IO_VIDEO_Y_MAX
         inc hl
         ld (hl), IO_VIDEO_MAX_CHAR & 0xff
         inc hl
@@ -211,18 +211,20 @@ _video_ioctl_set_cursor_xy:
         dec e
 _video_ioctl_set_cursor_y_valid:
         ; Add the scroll count to E
-        ld a, (scroll_count)
-        add e
+        ld a, e
+;        ld a, (scroll_count)
+;        add e
         cp c
         jr c, _video_ioctl_set_cursor_x
         ; No carry occurred, so E is bigger than C
         sub c
 _video_ioctl_set_cursor_x:
         ld (cursor_y), a
-        rrca
-        ; Store rolled Y in H
+        rra
         ld h, a
- 
+        rra
+        and a, 0b10000000
+        ld l, a
         ; Do the same adjustment for X
         ld a, d
         cp b
@@ -231,18 +233,13 @@ _video_ioctl_set_cursor_x:
         dec a
 _video_ioctl_set_cursor_x_valid:
         ld (cursor_x), a
-        ; Store X in L
-        ld l, a
-        ld a, h
-        or a, 0b01111111
         or a, l
         ld l, a
         res 7, h
+        set 6, h ;We know it always mapped to page 1
 ;        ld a, h
 ;        add a, IO_VIDEO_VIRT_TEXT_VRAM >> 8
 ;        ld h, a
-        set 6, h ;We know it always mapped to page 1
-
         ld (cursor_pos), hl
         call video_show_cursor
         call video_map_end
@@ -311,11 +308,16 @@ _video_ioctl_clear_screen:
         ;clear frame buffer
         xor a
         ld hl, IO_VIDEO_VIRT_TEXT_VRAM
-        ld bc, 0x1000
-        call _video_vram_set
+        ld (hl), a
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM + 1
+        ld bc, 0x1000 - 1
+        ldir
+;        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
+;        ld bc, 0x1000
+;        call _video_vram_set
         ; Screen has been cleared, reset the scrolling value
 ;        xor a
-        ld (scroll_count), a
+;        ld (scroll_count), a
 ;        out (IO_VIDEO_SCROLL_Y), a
         ; Reset the absolute cursor to position 0
         ld hl, IO_VIDEO_VIRT_TEXT_VRAM
@@ -337,16 +339,16 @@ _video_ioctl_clear_screen:
         ;   HL - Address of the memory to set
         ;   BC - Size of the memory
         ;   A - Data to write to it
-_video_vram_set:
-        ld d, a
-_video_vram_set_loop:
-        ld (hl), d
-        inc hl
-        dec bc
-        ld a, b
-        or c
-        jp nz, _video_vram_set_loop
-        ret
+;_video_vram_set:
+;        ld d, a
+;_video_vram_set_loop:
+;        ld (hl), d
+;        inc hl
+;        dec bc
+;        ld a, b
+;        or c
+;        jp nz, _video_vram_set_loop
+;        ret
 
 
 _video_ioctl_cmd_table:
@@ -396,11 +398,11 @@ video_write:
         ; At the moment always map the same 16KB containing the char and colors
         MMU_MAP_PHYS_ADDR(MMU_PAGE_1, IO_VIDEO_PHYS_ADDR_TEXT)
         push bc
-        push de
-        call video_hide_cursor
-        pop de
-        call print_buffer
-        call video_show_cursor
+;        push de
+;        call video_hide_cursor
+;        pop de
+        call video_print_buffer_from_cursor
+;        call video_show_cursor
         pop bc
         ; Restore the virtual page 1
         pop hl
@@ -446,56 +448,6 @@ _video_not_impl:
         ;================= S T D O U T     R O U T I N E S ====================;
         ;======================================================================;
 
-        ; Show the cursor, inverted colors.
-        ; The routine video_map_start must have been called
-        ; beforehand.
-        ; Parameters:
-        ;       None
-        ; Returns:
-        ;       None
-        ; Alters:
-        ;       A, HL, DE
-LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_show_cursor)
-        PUBLIC video_show_cursor
-video_show_cursor:
-        ld a, (invert_color)
-        ; A - Cursor color
-video_show_cursor_color:
-        ld d, a
-        ; X in L, Y in H
-        ld hl, (cursor_x)
-        ld a, IO_VIDEO_X_MAX
-        cp l
-        ; Unlikely, so use jr
-        jr z, _video_show_cursor_check_scroll
-_video_show_cursor_valid:
-        ld hl, (cursor_pos)
-        set 4, h ; point to attr
-        ld (hl), d
-        ret
-_video_show_cursor_check_scroll:
-        ; Check if we are about scroll at the next char entry <=> Y + 1 == scroll_count
-        ld a, (scroll_count)
-        sub h
-        dec a
-        jp nz, _video_show_cursor_valid
-        ret
-
-        ; Hide the cursor.
-        ; The routine video_map_start must have been called
-        ; beforehand.
-        ; Parameters:
-        ;       None
-        ; Returns:
-        ;       None
-        ; Alters:
-        ;       A, HL, DE
-LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_hide_cursor)
-        PUBLIC video_hide_cursor
-video_hide_cursor:
-        ld a, (chars_color)
-        jr video_show_cursor_color
-
         ; Map the video RAM in the second page.
         ; This is used by other drivers that want to show text or manipulate
         ; the text cursor several times, knowing that no read/write on user
@@ -524,7 +476,42 @@ video_map_end:
         MMU_SET_PAGE_NUMBER(MMU_PAGE_1)
         ret
 
-    IF CONFIG_TARGET_STDOUT_VIDEO
+
+        ; Show the cursor, inverted colors.
+        ; The routine video_map_start must have been called
+        ; beforehand.
+        ; Parameters:
+        ;       None
+        ; Returns:
+        ;       None
+        ; Alters:
+        ;       A, HL
+LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_show_cursor)
+        PUBLIC video_show_cursor
+video_show_cursor:
+        ld a, (invert_color)
+        ; A - Cursor color
+video_show_cursor_color:
+        ld hl, (cursor_pos)
+        set 4, h ; point to attr
+        ld (hl), a
+        ret
+
+        ; Hide the cursor.
+        ; The routine video_map_start must have been called
+        ; beforehand.
+        ; Parameters:
+        ;       None
+        ; Returns:
+        ;       None
+        ; Alters:
+        ;       A, HL
+LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_hide_cursor)
+        PUBLIC video_hide_cursor
+video_hide_cursor:
+        ld a, (chars_color)
+        jr video_show_cursor_color
+
         ; Print a buffer from the current cursor position, but without
         ; updating the cursor position at the end of the operation.
         ; The characters in the buffer must all be printable characters,
@@ -538,26 +525,28 @@ video_map_end:
         ;       None
         ; Alters:
         ;       A, BC, HL, DE
-        PUBLIC stdout_print_buffer
-stdout_print_buffer:
+LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_print_buffer)
         PUBLIC video_print_buffer_from_cursor
 video_print_buffer_from_cursor:
-        ld hl, (cursor_pos)
-        ; The cursor becomes the destination
-        ex de, hl
-        ldir
+        call video_hide_cursor
+video_print_buffer_loop:
+        ld a, (de)
+        call print_char
+        inc de
+        dec bc
+        ld a, b
+        or c
+        jr nz, video_print_buffer_loop
         jr video_show_cursor
 
-
-
-        PUBLIC stdout_print_char
-stdout_print_char:
+LABEL_IF(CONFIG_TARGET_STDOUT_VIDEO, stdout_print_char)
+        PUBLIC video_print_char
+video_print_char:
         ld b, a
         call video_hide_cursor
         ld a, b
         call print_char
-        jp video_show_cursor
-    ENDIF ; CONFIG_TARGET_STDOUT_VIDEO
+        jr video_show_cursor
 
         ; Routine called everytime a V-blank interrupt occurs
         ; Must not alter A
@@ -673,15 +662,15 @@ _video_msleep_wait:
         ;       BC - Size of the buffer
         ; Alters:
         ;       A, BC, DE, HL
-print_buffer:
-        ld a, b
-        or c
-        ret z
-        ld a, (de)
-        call print_char
-        inc de
-        dec bc
-        jp print_buffer
+;print_buffer:
+;        ld a, b
+;        or c
+;        ret z
+;        ld a, (de)
+;        call print_char
+;        inc de
+;        dec bc
+;        jr print_buffer
 
 
         ; Print a character at the cursors positions (cursor_x and cursor_y)
@@ -691,13 +680,10 @@ print_buffer:
         ;
         ; Parameter:
         ;       A - ASCII character to output
-        ;       DE - Address of the ASCII char (A)
-        ;       BC - Size of the string pointed by DE
         ; Returns:
-        ;       DE - New address of the string (if esc sequences)
-        ;       BC - New size of the string pointed by DE (if esc sequences)
+        ;       none
         ; Alters:
-        ;       A, BC, HL
+        ;       A, HL
         PUBLIC print_char
 print_char:
         or a
@@ -723,20 +709,24 @@ print_char:
         ret
 _print_char_newline:
         ; Before resetting cursor_x, let's make cursor_pos point to next line!
-        ; Perform cursor_pos += IO_VIDEO_X_MAX - cursor_x
+        ; Perform cursor_pos += IO_VIDEO_X_PHY - cursor_x
         ld a, (cursor_x)
         neg
-        add IO_VIDEO_X_MAX
+        add IO_VIDEO_X_PHY
         ld hl, (cursor_pos)
         ADD_HL_A()
         ld (cursor_pos), hl
         ld hl, cursor_x
-        jp _video_force_adjust_cursor
+        jr _video_force_adjust_cursor
 _print_char_carriage_return:
         ; This is similar to newline, expect that we subtract what has been reached
         ; cursor_x, instead of adding remaining chars
         ld hl, cursor_x
-        ld a, (hl)
+
+ ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ld b, (hl)
+ ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         ; Reset cursor_x now as we are currently pointing to it
         ld (hl), 0
         neg
@@ -779,7 +769,6 @@ _print_char_backspace:
         ld (cursor_pos), hl
         ret
 
-
 _video_adjust_cursor:
         ; Check if the current X is out of bound
         ld hl, cursor_x
@@ -791,46 +780,42 @@ _video_force_adjust_cursor:
         ; X reached the end of the line, reset it
         ld (hl), 0
         ; Update Y position to go to the next line (cursor_y + 1 == cursor_x)
-        inc hl
-        inc (hl)
+        inc hl ; now HL points to cursor_y
+        inc (hl) ; inc cursor_y
         ; Set the cursors back to 0 in case we reached the maximum, again
         ld a, (hl)
         cp IO_VIDEO_Y_MAX
-        ; Y has not reached the maximum, no need to reset absolute cursor
-        jp nz, _video_scroll_if_needed
-        ; Set the cursors (Y & absolute) back to 0 as we reached the maximum
-        xor a   ; new cursor_y
-        ld (hl), a
-        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
-        ld (cursor_pos), hl
-_video_scroll_if_needed:
-        jp scroll_screen_if_needed
-
-
-        ; Scroll the screen vertically by 1 line if necessary,
-        ; If the scroll index reaches the number of lines,
-        ; it will be reset to 0
-        ; Parameters:
-        ;       A - New cursor_y value
-        ; Returns:
-        ;       A - New scroll value
-        ; Alters:
-        ;       A, HL
-scroll_screen_if_needed:
+        ; Y has reached the maximum, scroll
+        jr z, _video_scroll_if_needed
+        ; no scroll needed, update absolute cursor
+        rra
         ld h, a
-        ld a, (scroll_count)
-        ; If cursor_y value reached the scroll_count, we have to scroll
-        cp h
-        ret nz
-        ; Increment the scroll count (A), reset to 0 if needed
-        inc a
-        cp IO_VIDEO_Y_MAX
-        jr nz, _scroll_screen_no_roll
-        xor a
-_scroll_screen_no_roll:
-        ld (scroll_count), a
-        ;out (IO_VIDEO_SCROLL_Y), a
-        jp erase_line
+        rra
+        and a, 0b10000000
+        ld l, a
+        res 7, h
+        set 6, h ;We know it always mapped to page 1
+;        ld a, h
+;        add a, IO_VIDEO_VIRT_TEXT_VRAM >> 8
+;        ld h, a
+        ld (cursor_pos), hl
+        ret
+
+_video_scroll_if_needed:
+        ; Set the cursors (Y & absolute) back to previous (bottom line) as we reached the maximum
+        push de
+        push bc
+        dec a   ; new cursor_y
+        ld (hl), a
+        ld hl, IO_VIDEO_VIRT_TEXT_VRAM + 0x1000 - IO_VIDEO_X_PHY * 3
+        ld (cursor_pos), hl
+        ld hl, IO_VIDEO_VIRT_TEXT_VRAM + IO_VIDEO_X_PHY
+        ld de, IO_VIDEO_VIRT_TEXT_VRAM
+        ld bc, 0x1000 - IO_VIDEO_X_PHY * 2
+        ldir
+        pop bc
+        pop de
+        ret
 
 
         ; Set the screen scrolling to a particular value
@@ -840,15 +825,15 @@ _scroll_screen_no_roll:
         ;       None
         ; Alters:
         ;       A
-scroll_set:
-        cp IO_VIDEO_Y_MAX
-        jr c, _scroll_set_correct
-        sub IO_VIDEO_Y_MAX
-        jr scroll_set
-_scroll_set_correct:
-        ld (scroll_count), a
+;scroll_set:
+;        cp IO_VIDEO_Y_MAX
+;        jr c, _scroll_set_correct
+;        sub IO_VIDEO_Y_MAX
+;        jr scroll_set
+;_scroll_set_correct:
+;        ld (scroll_count), a
         ;out (IO_VIDEO_SCROLL_Y), a
-        ret
+;        ret
 
 
         ; Erase a whole video line (writes blank character on the current line)
@@ -858,17 +843,17 @@ _scroll_set_correct:
         ;       None
         ; Alters:
         ;       A, HL
-erase_line:
-        push bc
-        xor a
-        ld hl, (cursor_pos)
-        ld b, IO_VIDEO_X_MAX
-_erase_line_loop:
-        ld (hl), a
-        inc hl
-        djnz _erase_line_loop
-        pop bc
-        ret
+; erase_line:
+;         push bc
+;         xor a
+;         ld hl, (cursor_pos)
+;         ld b, IO_VIDEO_X_MAX
+; _erase_line_loop:
+;         ld (hl), a
+;         inc hl
+;         djnz _erase_line_loop
+;         pop bc
+;         ret
 
 _rom_font:
     INCBIN "font.bin"

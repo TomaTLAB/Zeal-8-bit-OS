@@ -1,0 +1,936 @@
+TimeQuest Timing Analyzer report for z80mini
+Sat Mar 16 22:14:28 2024
+Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. TimeQuest Timing Analyzer Summary
+  3. Parallel Compilation
+  4. Clocks
+  5. Fmax Summary
+  6. Setup Summary
+  7. Hold Summary
+  8. Recovery Summary
+  9. Removal Summary
+ 10. Minimum Pulse Width Summary
+ 11. Setup: 'CLK50MHz'
+ 12. Hold: 'CLK50MHz'
+ 13. Minimum Pulse Width: 'CLK50MHz'
+ 14. Setup Times
+ 15. Hold Times
+ 16. Clock to Output Times
+ 17. Minimum Clock to Output Times
+ 18. Propagation Delay
+ 19. Minimum Propagation Delay
+ 20. Setup Transfers
+ 21. Hold Transfers
+ 22. Report TCCS
+ 23. Report RSKM
+ 24. Unconstrained Paths
+ 25. TimeQuest Timing Analyzer Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++-----------------------------------------------------------------------------------------+
+; TimeQuest Timing Analyzer Summary                                                       ;
++--------------------+--------------------------------------------------------------------+
+; Quartus II Version ; Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version ;
+; Revision Name      ; z80mini                                                            ;
+; Device Family      ; MAX7000S                                                           ;
+; Device Name        ; EPM7128SLC84-15                                                    ;
+; Timing Models      ; Final                                                              ;
+; Delay Model        ; Slow Model                                                         ;
+; Rise/Fall Delays   ; Unavailable                                                        ;
++--------------------+--------------------------------------------------------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 48          ;
+; Maximum allowed            ; 16          ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
+;     Processors 2-48        ;   0.0%      ;
++----------------------------+-------------+
+
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Clocks                                                                                                                                                                               ;
++------------+------+--------+------------+-------+-------+------------+-----------+-------------+-------+--------+-----------+------------+----------+--------+--------+--------------+
+; Clock Name ; Type ; Period ; Frequency  ; Rise  ; Fall  ; Duty Cycle ; Divide by ; Multiply by ; Phase ; Offset ; Edge List ; Edge Shift ; Inverted ; Master ; Source ; Targets      ;
++------------+------+--------+------------+-------+-------+------------+-----------+-------------+-------+--------+-----------+------------+----------+--------+--------+--------------+
+; CLK50MHz   ; Base ; 1.000  ; 1000.0 MHz ; 0.000 ; 0.500 ;            ;           ;             ;       ;        ;           ;            ;          ;        ;        ; { CLK50MHz } ;
++------------+------+--------+------------+-------+-------+------------+-----------+-------------+-------+--------+-----------+------------+----------+--------+--------+--------------+
+
+
++-------------------------------------------------+
+; Fmax Summary                                    ;
++-----------+-----------------+------------+------+
+; Fmax      ; Restricted Fmax ; Clock Name ; Note ;
++-----------+-----------------+------------+------+
+; 25.64 MHz ; 25.64 MHz       ; CLK50MHz   ;      ;
++-----------+-----------------+------------+------+
+This panel reports FMAX for every clock in the design, regardless of the user-specified clock periods.  FMAX is only computed for paths where the source and destination registers or ports are driven by the same clock.  Paths of different clocks, including generated clocks, are ignored.  For paths between a clock and its inversion, FMAX is computed as if the rising and falling edges are scaled along with FMAX, such that the duty cycle (in terms of a percentage) is maintained. Altera recommends that you always use clock constraints and other slack reports for sign-off analysis.
+
+
++------------------------------------+
+; Setup Summary                      ;
++----------+---------+---------------+
+; Clock    ; Slack   ; End Point TNS ;
++----------+---------+---------------+
+; CLK50MHz ; -38.000 ; -802.000      ;
++----------+---------+---------------+
+
+
++----------------------------------+
+; Hold Summary                     ;
++----------+-------+---------------+
+; Clock    ; Slack ; End Point TNS ;
++----------+-------+---------------+
+; CLK50MHz ; 5.000 ; 0.000         ;
++----------+-------+---------------+
+
+
+--------------------
+; Recovery Summary ;
+--------------------
+No paths to report.
+
+
+-------------------
+; Removal Summary ;
+-------------------
+No paths to report.
+
+
++-----------------------------------+
+; Minimum Pulse Width Summary       ;
++----------+--------+---------------+
+; Clock    ; Slack  ; End Point TNS ;
++----------+--------+---------------+
+; CLK50MHz ; -4.500 ; -576.000      ;
++----------+--------+---------------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Setup: 'CLK50MHz'                                                                                                                                                                                             ;
++---------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; Slack   ; From Node                                                     ; To Node                                                       ; Launch Clock ; Latch Clock ; Relationship ; Clock Skew ; Data Delay ;
++---------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; -38.000 ; PS2_receiver:ps2r|kin[7]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 35.000     ;
+; -38.000 ; PS2_receiver:ps2r|kin[5]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 35.000     ;
+; -30.000 ; PS2_receiver:ps2r|kin[8]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 27.000     ;
+; -30.000 ; PS2_receiver:ps2r|kin[6]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 27.000     ;
+; -30.000 ; PS2_receiver:ps2r|kin[2]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 27.000     ;
+; -22.000 ; PS2_receiver:ps2r|kin[1]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 19.000     ;
+; -22.000 ; PS2_receiver:ps2r|kin[4]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 19.000     ;
+; -22.000 ; PS2_receiver:ps2r|kin[0]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 19.000     ;
+; -22.000 ; PS2_receiver:ps2r|kin[3]                                      ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 19.000     ;
+; -20.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|kbusy                                       ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|kcount[2]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|kcount[3]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -20.000 ; PS2_receiver:ps2r|kcount[1]                                   ; PS2_receiver:ps2r|ps2_done                                    ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 17.000     ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[0]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[0]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; mapper[2][5]                                                  ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; mapper[1][5]                                                  ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; mapper[3][5]                                                  ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|kbusy                                       ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|kcount[1]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
+; -12.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 1.000        ; 0.000      ; 9.000      ;
++---------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Hold: 'CLK50MHz'                                                                                                                                                                                            ;
++-------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; Slack ; From Node                                                     ; To Node                                                       ; Launch Clock ; Latch Clock ; Relationship ; Clock Skew ; Data Delay ;
++-------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[0]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[0]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; frequency_generator:fg0|cpu_counter[2]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; frequency_generator:fg0|cpu_counter[1]                        ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; signal_conditioner:res_con|sig_out                            ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; mapper[2][5]                                                  ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[2][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; mapper[1][5]                                                  ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[1][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; mapper[3][5]                                                  ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; mapper[3][5]                                                  ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|klatch[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|klatch[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kbusy                                       ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|kcount[0]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[1]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kbusy                                       ; PS2_receiver:ps2r|kcount[1]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[2]                                   ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[0]                                   ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[1]                                   ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[1]                        ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[0]                        ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; frequency_generator:fg0|cpu_counter[2]                        ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kbusy                                       ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[0]                                   ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|klatch[1]                                   ; PS2_receiver:ps2r|kcount[2]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; PS2_receiver:ps2r|kcount[3]                                   ; PS2_receiver:ps2r|kcount[3]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
+; 5.000 ; signal_conditioner:res_con|sig_out                            ; PS2_receiver:ps2r|kcount[3]                                   ; CLK50MHz     ; CLK50MHz    ; 0.000        ; 0.000      ; 9.000      ;
++-------+---------------------------------------------------------------+---------------------------------------------------------------+--------------+-------------+--------------+------------+------------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+; Minimum Pulse Width: 'CLK50MHz'                                                                                                                   ;
++--------+--------------+----------------+------------------+----------+------------+---------------------------------------------------------------+
+; Slack  ; Actual Width ; Required Width ; Type             ; Clock    ; Clock Edge ; Target                                                        ;
++--------+--------------+----------------+------------------+----------+------------+---------------------------------------------------------------+
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kbusy                                       ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kbusy                                       ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[0]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[0]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[1]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[1]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[2]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[2]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[3]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kcount[3]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[0]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[0]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[1]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[1]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[2]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[2]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[3]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[3]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[4]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[4]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[5]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[5]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[6]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[6]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[7]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[7]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[8]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|kin[8]                                      ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|klatch[0]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|klatch[0]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|klatch[1]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|klatch[1]                                   ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_done                                    ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_done                                    ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[0]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[0]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[1]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[1]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[2]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[2]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[3]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[3]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[4]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[4]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[5]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[5]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[6]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[6]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[7]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; PS2_receiver:ps2r|ps2_out[7]                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; div                                                           ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; div                                                           ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[0]                        ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[0]                        ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[1]                        ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[1]                        ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[2]                        ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|cpu_counter[2]                        ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[0] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[1] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[2] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[3] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[4] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|lpm_counter:con_counter_rtl_0|dffs[5] ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; frequency_generator:fg0|t                                     ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; frequency_generator:fg0|t                                     ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][1]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][1]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][2]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][2]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][3]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][3]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][4]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][4]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[0][5]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[0][5]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][1]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][1]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][2]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][2]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][3]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][3]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][4]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][4]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[1][5]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[1][5]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[2][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[2][0]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; High Pulse Width ; CLK50MHz ; Rise       ; mapper[2][1]                                                  ;
+; -4.500 ; 0.500        ; 5.000          ; Low Pulse Width  ; CLK50MHz ; Rise       ; mapper[2][1]                                                  ;
++--------+--------------+----------------+------------------+----------+------------+---------------------------------------------------------------+
+
+
++-------------------------------------------------------------------------+
+; Setup Times                                                             ;
++-----------+------------+--------+--------+------------+-----------------+
+; Data Port ; Clock Port ; Rise   ; Fall   ; Clock Edge ; Clock Reference ;
++-----------+------------+--------+--------+------------+-----------------+
+; A[*]      ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[0]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[1]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[4]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[5]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[6]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  A[7]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; D[*]      ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[0]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[1]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[2]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[3]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[4]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  D[5]     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; EXT_P[*]  ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  EXT_P[4] ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+;  EXT_P[7] ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; nIORQ     ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; nRD       ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; nRES      ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
+; nWR       ; CLK50MHz   ; 11.000 ; 11.000 ; Rise       ; CLK50MHz        ;
++-----------+------------+--------+--------+------------+-----------------+
+
+
++-------------------------------------------------------------------------+
+; Hold Times                                                              ;
++-----------+------------+--------+--------+------------+-----------------+
+; Data Port ; Clock Port ; Rise   ; Fall   ; Clock Edge ; Clock Reference ;
++-----------+------------+--------+--------+------------+-----------------+
+; A[*]      ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[0]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[1]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[4]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[5]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[6]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  A[7]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; D[*]      ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[0]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[1]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[2]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[3]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[4]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  D[5]     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; EXT_P[*]  ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  EXT_P[4] ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+;  EXT_P[7] ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; nIORQ     ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; nRD       ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; nRES      ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
+; nWR       ; CLK50MHz   ; -3.000 ; -3.000 ; Rise       ; CLK50MHz        ;
++-----------+------------+--------+--------+------------+-----------------+
+
+
++-------------------------------------------------------------------------+
+; Clock to Output Times                                                   ;
++-----------+------------+--------+--------+------------+-----------------+
+; Data Port ; Clock Port ; Rise   ; Fall   ; Clock Edge ; Clock Reference ;
++-----------+------------+--------+--------+------------+-----------------+
+; CONCLK    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; CPUCLK    ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; D[*]      ; CLK50MHz   ; 27.000 ; 27.000 ; Rise       ; CLK50MHz        ;
+;  D[0]     ; CLK50MHz   ; 18.000 ; 18.000 ; Rise       ; CLK50MHz        ;
+;  D[1]     ; CLK50MHz   ; 27.000 ; 27.000 ; Rise       ; CLK50MHz        ;
+;  D[2]     ; CLK50MHz   ; 26.000 ; 26.000 ; Rise       ; CLK50MHz        ;
+;  D[3]     ; CLK50MHz   ; 26.000 ; 26.000 ; Rise       ; CLK50MHz        ;
+;  D[4]     ; CLK50MHz   ; 18.000 ; 18.000 ; Rise       ; CLK50MHz        ;
+;  D[5]     ; CLK50MHz   ; 27.000 ; 27.000 ; Rise       ; CLK50MHz        ;
+;  D[6]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[7]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; E         ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; EXT_A[*]  ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[0] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[1] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[2] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[3] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[4] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[5] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; EXT_P[*]  ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[2] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[5] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[6] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; RESET     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; RS        ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; TCLK      ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nINT      ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nRAMCS    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; nRESET    ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nROMCS    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
++-----------+------------+--------+--------+------------+-----------------+
+
+
++-------------------------------------------------------------------------+
+; Minimum Clock to Output Times                                           ;
++-----------+------------+--------+--------+------------+-----------------+
+; Data Port ; Clock Port ; Rise   ; Fall   ; Clock Edge ; Clock Reference ;
++-----------+------------+--------+--------+------------+-----------------+
+; CONCLK    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; CPUCLK    ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; D[*]      ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[0]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[1]     ; CLK50MHz   ; 26.000 ; 26.000 ; Rise       ; CLK50MHz        ;
+;  D[2]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[3]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[4]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[5]     ; CLK50MHz   ; 26.000 ; 26.000 ; Rise       ; CLK50MHz        ;
+;  D[6]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  D[7]     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; E         ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; EXT_A[*]  ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[0] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[1] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[2] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[3] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[4] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+;  EXT_A[5] ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; EXT_P[*]  ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[2] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[5] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+;  EXT_P[6] ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; RESET     ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; RS        ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; TCLK      ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nINT      ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nRAMCS    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
+; nRESET    ; CLK50MHz   ; 8.000  ; 8.000  ; Rise       ; CLK50MHz        ;
+; nROMCS    ; CLK50MHz   ; 17.000 ; 17.000 ; Rise       ; CLK50MHz        ;
++-----------+------------+--------+--------+------------+-----------------+
+
+
++--------------------------------------------------------------+
+; Propagation Delay                                            ;
++------------+-------------+--------+--------+--------+--------+
+; Input Port ; Output Port ; RR     ; RF     ; FR     ; FF     ;
++------------+-------------+--------+--------+--------+--------+
+; A[0]       ; D[0]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[1]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[2]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[0]       ; D[3]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[0]       ; D[4]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[5]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[6]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[7]        ; 22.000 ;        ;        ; 22.000 ;
+; A[1]       ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[2]        ; 25.000 ; 22.000 ; 22.000 ; 25.000 ;
+; A[1]       ; D[3]        ; 25.000 ; 22.000 ; 22.000 ; 25.000 ;
+; A[1]       ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[7]        ;        ; 22.000 ; 22.000 ;        ;
+; A[3]       ; nCONCS      ; 15.000 ;        ;        ; 15.000 ;
+; A[4]       ; D[0]        ; 22.000 ; 16.000 ; 16.000 ; 22.000 ;
+; A[4]       ; D[1]        ; 25.000 ; 24.000 ; 24.000 ; 25.000 ;
+; A[4]       ; D[2]        ; 23.000 ; 25.000 ; 25.000 ; 23.000 ;
+; A[4]       ; D[3]        ; 23.000 ; 25.000 ; 25.000 ; 23.000 ;
+; A[4]       ; D[4]        ; 22.000 ; 16.000 ; 16.000 ; 22.000 ;
+; A[4]       ; D[5]        ; 24.000 ; 25.000 ; 25.000 ; 24.000 ;
+; A[4]       ; D[6]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[4]       ; D[7]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[4]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[5]       ; D[0]        ; 22.000 ;        ;        ; 22.000 ;
+; A[5]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[5]       ; D[2]        ; 25.000 ; 24.000 ; 24.000 ; 25.000 ;
+; A[5]       ; D[3]        ; 25.000 ; 24.000 ; 24.000 ; 25.000 ;
+; A[5]       ; D[4]        ; 22.000 ;        ;        ; 22.000 ;
+; A[5]       ; D[5]        ; 25.000 ;        ;        ; 25.000 ;
+; A[5]       ; D[6]        ; 22.000 ;        ;        ; 22.000 ;
+; A[5]       ; D[7]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[5]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[6]       ; D[0]        ; 22.000 ;        ;        ; 22.000 ;
+; A[6]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[6]       ; D[2]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[6]       ; D[3]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[6]       ; D[4]        ; 22.000 ;        ;        ; 22.000 ;
+; A[6]       ; D[5]        ; 25.000 ;        ;        ; 25.000 ;
+; A[6]       ; D[6]        ; 22.000 ;        ;        ; 22.000 ;
+; A[6]       ; D[7]        ; 22.000 ;        ;        ; 22.000 ;
+; A[6]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[7]       ; D[0]        ; 22.000 ;        ;        ; 22.000 ;
+; A[7]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[7]       ; D[2]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[7]       ; D[3]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[7]       ; D[4]        ; 22.000 ;        ;        ; 22.000 ;
+; A[7]       ; D[5]        ; 25.000 ;        ;        ; 25.000 ;
+; A[7]       ; D[6]        ; 22.000 ;        ;        ; 22.000 ;
+; A[7]       ; D[7]        ; 22.000 ;        ;        ; 22.000 ;
+; A[7]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[14]      ; D[0]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; D[1]        ; 24.000 ; 25.000 ; 25.000 ; 24.000 ;
+; A[14]      ; D[2]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; D[3]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; D[4]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; D[5]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; EXT_A[0]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[1]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[2]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[3]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[4]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[5]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; RS          ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; nRAMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; nROMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[0]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[1]        ; 24.000 ; 25.000 ; 25.000 ; 24.000 ;
+; A[15]      ; D[2]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; D[3]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; D[4]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[5]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; EXT_A[0]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[1]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[2]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[3]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[4]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[5]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; RS          ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; nRAMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; nROMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; EXT_P[3]   ; D[3]        ; 25.000 ;        ;        ; 25.000 ;
+; EXT_P[5]   ; D[2]        ; 25.000 ;        ;        ; 25.000 ;
+; nIORQ      ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; D[1]        ;        ; 24.000 ; 24.000 ;        ;
+; nIORQ      ; D[2]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nIORQ      ; D[3]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nIORQ      ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; D[5]        ;        ; 25.000 ; 25.000 ;        ;
+; nIORQ      ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; D[7]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; nM1        ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; D[1]        ;        ; 24.000 ; 24.000 ;        ;
+; nM1        ; D[2]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nM1        ; D[3]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nM1        ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; D[5]        ;        ; 25.000 ; 25.000 ;        ;
+; nM1        ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; D[7]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; nCONCS      ; 15.000 ;        ;        ; 15.000 ;
+; nMREQ      ; RS          ;        ; 15.000 ; 15.000 ;        ;
+; nMREQ      ; nRAMCS      ;        ; 15.000 ; 15.000 ;        ;
+; nMREQ      ; nROMCS      ;        ; 15.000 ; 15.000 ;        ;
+; nRD        ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[2]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[3]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[7]        ;        ; 22.000 ; 22.000 ;        ;
+; nWR        ; RS          ;        ; 15.000 ; 15.000 ;        ;
++------------+-------------+--------+--------+--------+--------+
+
+
++--------------------------------------------------------------+
+; Minimum Propagation Delay                                    ;
++------------+-------------+--------+--------+--------+--------+
+; Input Port ; Output Port ; RR     ; RF     ; FR     ; FF     ;
++------------+-------------+--------+--------+--------+--------+
+; A[0]       ; D[0]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[1]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[2]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[0]       ; D[3]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[0]       ; D[4]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[5]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[6]        ; 22.000 ;        ;        ; 22.000 ;
+; A[0]       ; D[7]        ; 15.000 ;        ;        ; 15.000 ;
+; A[1]       ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[2]        ; 25.000 ; 22.000 ; 22.000 ; 25.000 ;
+; A[1]       ; D[3]        ; 25.000 ; 22.000 ; 22.000 ; 25.000 ;
+; A[1]       ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; A[1]       ; D[7]        ;        ; 15.000 ; 15.000 ;        ;
+; A[3]       ; nCONCS      ; 15.000 ;        ;        ; 15.000 ;
+; A[4]       ; D[0]        ; 15.000 ; 16.000 ; 16.000 ; 15.000 ;
+; A[4]       ; D[1]        ; 22.000 ; 24.000 ; 24.000 ; 22.000 ;
+; A[4]       ; D[2]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[4]       ; D[3]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[4]       ; D[4]        ; 15.000 ; 16.000 ; 16.000 ; 15.000 ;
+; A[4]       ; D[5]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[4]       ; D[6]        ; 22.000 ; 15.000 ; 15.000 ; 22.000 ;
+; A[4]       ; D[7]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[4]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[5]       ; D[0]        ; 15.000 ;        ;        ; 15.000 ;
+; A[5]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[5]       ; D[2]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[5]       ; D[3]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[5]       ; D[4]        ; 15.000 ;        ;        ; 15.000 ;
+; A[5]       ; D[5]        ; 22.000 ;        ;        ; 22.000 ;
+; A[5]       ; D[6]        ; 15.000 ;        ;        ; 15.000 ;
+; A[5]       ; D[7]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[5]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[6]       ; D[0]        ; 15.000 ;        ;        ; 15.000 ;
+; A[6]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[6]       ; D[2]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[6]       ; D[3]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[6]       ; D[4]        ; 15.000 ;        ;        ; 15.000 ;
+; A[6]       ; D[5]        ; 22.000 ;        ;        ; 22.000 ;
+; A[6]       ; D[6]        ; 15.000 ;        ;        ; 15.000 ;
+; A[6]       ; D[7]        ; 15.000 ;        ;        ; 15.000 ;
+; A[6]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[7]       ; D[0]        ; 15.000 ;        ;        ; 15.000 ;
+; A[7]       ; D[1]        ; 22.000 ; 25.000 ; 25.000 ; 22.000 ;
+; A[7]       ; D[2]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[7]       ; D[3]        ; 15.000 ; 23.000 ; 23.000 ; 15.000 ;
+; A[7]       ; D[4]        ; 15.000 ;        ;        ; 15.000 ;
+; A[7]       ; D[5]        ; 22.000 ;        ;        ; 22.000 ;
+; A[7]       ; D[6]        ; 15.000 ;        ;        ; 15.000 ;
+; A[7]       ; D[7]        ; 15.000 ;        ;        ; 15.000 ;
+; A[7]       ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; A[14]      ; D[0]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; D[1]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; D[2]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; D[3]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; D[4]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; D[5]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[14]      ; EXT_A[0]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[1]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[2]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[3]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[4]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; EXT_A[5]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; RS          ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; nRAMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[14]      ; nROMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[0]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[1]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; D[2]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; D[3]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; D[4]        ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; D[5]        ; 24.000 ; 24.000 ; 24.000 ; 24.000 ;
+; A[15]      ; EXT_A[0]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[1]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[2]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[3]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[4]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; EXT_A[5]    ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; RS          ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; nRAMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; A[15]      ; nROMCS      ; 15.000 ; 15.000 ; 15.000 ; 15.000 ;
+; EXT_P[3]   ; D[3]        ; 25.000 ;        ;        ; 25.000 ;
+; EXT_P[5]   ; D[2]        ; 25.000 ;        ;        ; 25.000 ;
+; nIORQ      ; D[0]        ;        ; 16.000 ; 16.000 ;        ;
+; nIORQ      ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; D[2]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nIORQ      ; D[3]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nIORQ      ; D[4]        ;        ; 16.000 ; 16.000 ;        ;
+; nIORQ      ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; nIORQ      ; D[6]        ;        ; 15.000 ; 15.000 ;        ;
+; nIORQ      ; D[7]        ;        ; 15.000 ; 15.000 ;        ;
+; nIORQ      ; nCONCS      ;        ; 15.000 ; 15.000 ;        ;
+; nM1        ; D[0]        ;        ; 16.000 ; 16.000 ;        ;
+; nM1        ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; D[2]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nM1        ; D[3]        ; 15.000 ; 22.000 ; 22.000 ; 15.000 ;
+; nM1        ; D[4]        ;        ; 16.000 ; 16.000 ;        ;
+; nM1        ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; nM1        ; D[6]        ;        ; 15.000 ; 15.000 ;        ;
+; nM1        ; D[7]        ;        ; 15.000 ; 15.000 ;        ;
+; nM1        ; nCONCS      ; 15.000 ;        ;        ; 15.000 ;
+; nMREQ      ; RS          ;        ; 15.000 ; 15.000 ;        ;
+; nMREQ      ; nRAMCS      ;        ; 15.000 ; 15.000 ;        ;
+; nMREQ      ; nROMCS      ;        ; 15.000 ; 15.000 ;        ;
+; nRD        ; D[0]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[1]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[2]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[3]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[4]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[5]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[6]        ;        ; 22.000 ; 22.000 ;        ;
+; nRD        ; D[7]        ;        ; 22.000 ; 22.000 ;        ;
+; nWR        ; RS          ;        ; 15.000 ; 15.000 ;        ;
++------------+-------------+--------+--------+--------+--------+
+
+
++-------------------------------------------------------------------+
+; Setup Transfers                                                   ;
++------------+----------+----------+----------+----------+----------+
+; From Clock ; To Clock ; RR Paths ; FR Paths ; RF Paths ; FF Paths ;
++------------+----------+----------+----------+----------+----------+
+; CLK50MHz   ; CLK50MHz ; 1050     ; 0        ; 0        ; 0        ;
++------------+----------+----------+----------+----------+----------+
+Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
+
+
++-------------------------------------------------------------------+
+; Hold Transfers                                                    ;
++------------+----------+----------+----------+----------+----------+
+; From Clock ; To Clock ; RR Paths ; FR Paths ; RF Paths ; FF Paths ;
++------------+----------+----------+----------+----------+----------+
+; CLK50MHz   ; CLK50MHz ; 1050     ; 0        ; 0        ; 0        ;
++------------+----------+----------+----------+----------+----------+
+Entries labeled "false path" only account for clock-to-clock false paths and not path-based false paths. As a result, actual path counts may be lower than reported.
+
+
+---------------
+; Report TCCS ;
+---------------
+No dedicated SERDES Transmitter circuitry present in device or used in design
+
+
+---------------
+; Report RSKM ;
+---------------
+No dedicated SERDES Receiver circuitry present in device or used in design
+
+
++------------------------------------------------+
+; Unconstrained Paths                            ;
++---------------------------------+-------+------+
+; Property                        ; Setup ; Hold ;
++---------------------------------+-------+------+
+; Illegal Clocks                  ; 0     ; 0    ;
+; Unconstrained Clocks            ; 0     ; 0    ;
+; Unconstrained Input Ports       ; 25    ; 25   ;
+; Unconstrained Input Port Paths  ; 367   ; 367  ;
+; Unconstrained Output Ports      ; 28    ; 28   ;
+; Unconstrained Output Port Paths ; 223   ; 223  ;
++---------------------------------+-------+------+
+
+
++------------------------------------+
+; TimeQuest Timing Analyzer Messages ;
++------------------------------------+
+Info: *******************************************************************
+Info: Running Quartus II 64-Bit TimeQuest Timing Analyzer
+    Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Full Version
+    Info: Processing started: Sat Mar 16 22:14:24 2024
+Info: Command: quartus_sta z80mini -c z80mini
+Info: qsta_default_script.tcl version: #1
+Info: Parallel Compilation has detected 48 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 16 of the 16 physical processors detected instead.
+Info: Started post-fitting delay annotation
+Info: Delay annotation completed successfully
+Warning: TimeQuest Timing Analyzer does not support the analysis of latches as synchronous elements for the currently selected device family.
+Critical Warning: Synopsys Design Constraints File file not found: 'z80mini.sdc'. A Synopsys Design Constraints File is required by the TimeQuest Timing Analyzer to get proper timing constraints. Without it, the Compiler will not properly optimize the design.
+Info: No user constrained base clocks found in the design. Calling "derive_clocks -period 1.0"
+Info: Deriving Clocks
+    Info: create_clock -period 1.000 -name CLK50MHz CLK50MHz
+Info: Found TIMEQUEST_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS = ON
+Critical Warning: Timing requirements not met
+Info: Worst-case setup slack is -38.000
+    Info:     Slack End Point TNS Clock 
+    Info: ========= ============= =====================
+    Info:   -38.000      -802.000 CLK50MHz 
+Info: Worst-case hold slack is 5.000
+    Info:     Slack End Point TNS Clock 
+    Info: ========= ============= =====================
+    Info:     5.000         0.000 CLK50MHz 
+Info: No Recovery paths to report
+Info: No Removal paths to report
+Info: Worst-case minimum pulse width slack is -4.500
+    Info:     Slack End Point TNS Clock 
+    Info: ========= ============= =====================
+    Info:    -4.500      -576.000 CLK50MHz 
+Info: The selected device family is not supported by the report_metastability command.
+Info: Design is not fully constrained for setup requirements
+Info: Design is not fully constrained for hold requirements
+Info: Quartus II 64-Bit TimeQuest Timing Analyzer was successful. 0 errors, 3 warnings
+    Info: Peak virtual memory: 4569 megabytes
+    Info: Processing ended: Sat Mar 16 22:14:27 2024
+    Info: Elapsed time: 00:00:03
+    Info: Total CPU time (on all processors): 00:00:01
+
+

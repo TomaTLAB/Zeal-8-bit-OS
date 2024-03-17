@@ -87,13 +87,13 @@ module z80mini(
 	reg sda, scl, s_tx;
 
    always @(posedge CLK50MHz) begin
+		div <= ~div;
 		if (~nRESET) begin
 			mapper[0][7:0] <= 8'h00; // 0x000000 
 			mapper[1][7:0] <= 8'h20; // 0x080000
 			mapper[2][7:0] <= 8'h21; // 0x084000
 			mapper[3][7:0] <= 8'h22; // 0x088000
 		end else begin
-			div <= ~div;
 			if (CPUCLK0 && (nIORQ == 0 && nWR == 0 && map_cs)) begin
 				mapper[A[1:0]][7:0] <= D[7:0]; // mapper write addressed by 2 LSB of CPU address bus 
 			end

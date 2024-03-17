@@ -55,24 +55,31 @@ menu "Z80mini configuration"
 
     config KERNEL_RAM_PHYS_ADDRESS
         hex "Kernel RAM physical address"
-        default 0x80000
-        range 0x80000 0xFC000
+        default 0x080000
+        range 0x080000 0x3FC000
         help
             Physical address where the Kernel and drivers data (including BSS) will be stored in RAM.
             If the kernel is meant to be executed from RAM, this value must be checked to avoid overlapping with kernel code!
 
+    config KERNEL_RAM_PHYS_SIZE
+        hex "Kernel RAM physical size"
+        default 0x07C000
+        range 0x004000 0x3FC000
+        help
+            Size of the RAM in bytes
+
     config ROMDISK_ADDRESS
         hex "ROMDISK image physical address"
-        default 0x04000
-        range 0x04000 0x3C000
+        default 0x004000
+        range 0x000000 0x3FC000
         help
             Address where the ROMDISK image will be placed in flash memory. As flash is mapped at physical address 0x0000,
             this value also represents the physical address of ROMDISK image.
 
     config KERNEL_PHYS_ADDRESS
         hex "Physical address of the kernel"
-        default 0x00000
-        range 0x00000 0x3C000
+        default 0x000000
+        range 0x000000 0x3FC000
         help
             Address where the kernel/OS will be placed in flash memory. This will be used to calculate the offset between,
             the kernel and the romdisk. For example, if kernel is meant to be flashed at 0x4000 and the romdisk at 0x8000,
@@ -131,22 +138,22 @@ menu "Z80mini configuration"
 
     config TEXT_ADDRESS
         hex "Text characters area physical address"
-        default 0x40000
-        range 0x40000 0x7C000
+        default 0x0FC000
+        range 0x000000 0x3FF000
         help
             Address where the TEXT area of video RAM starts.
 
     config ATTR_ADDRESS
         hex "Text attributes area physical address"
-        default 0x41000
-        range 0x40000 0x7C000
+        default 0x0FD000
+        range 0x000000 0x3FF000
         help
             Address where the ATTRIBUTE area of video RAM starts.
 
     config FONT_ADDRESS
         hex "Loadable font area physical address"
-        default 0x42000
-        range 0x40000 0x7C000
+        default 0x0FE000
+        range 0x000000 0x3FF000
         help
             Address where the loadable FONT area of video RAM starts.
 

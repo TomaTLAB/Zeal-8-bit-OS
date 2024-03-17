@@ -7,8 +7,9 @@
         INCLUDE "zos_keyboard.asm"
 
         DEFC BG_COLOR     = TEXT_COLOR_BLACK
-        DEFC CURDIR_COLOR = TEXT_COLOR_LIGHT_GRAY
-        DEFC TEXT_COLOR   = TEXT_COLOR_WHITE
+        DEFC CURDIR_COLOR = TEXT_COLOR_GREEN
+        DEFC USER_TEXT_COLOR   = TEXT_COLOR_YELLOW
+        DEFC SYS_TEXT_COLOR   = TEXT_COLOR_CYAN
 
         ; Designate the order of the sections before starting the code
         ; We can name the sections whatever we want, but it has to match
@@ -52,7 +53,7 @@ next_command:
         WRITE()
         ERR_CHECK(error_printing_dir)
         ; Reset the text color
-        ld e, TEXT_COLOR
+        ld e, USER_TEXT_COLOR
         call set_out_color
         ; Read from the stdin
         ld de, bigbuffer
@@ -65,19 +66,25 @@ next_command:
         ; and check for 0 and 1. Remove the final \n too.
         ld a, b
         or c
-        jp z, next_command
+        jr z, next_command
         ; Check that BC is not 1 and remove the final \n
         dec bc
         ld a, b
         or c
-        jp z, next_command
+        jr z, next_command
         ld h, d
         ld l, e
         add hl, bc
         ld (hl), 0
         ; We can now parse the command line
+        push de
+        push bc
+        ld e, SYS_TEXT_COLOR
+        call set_out_color
+        pop bc
+        pop de
         call parse_exec_cmd
-        jp next_command
+        jr next_command
 
 
 error_current_dir:
@@ -174,10 +181,10 @@ promptlen:
         ld c, a
 _promptlen_loop:
         cp (hl)
-        jp z, _promptlen_loop_end
+        jr z, _promptlen_loop_end
         inc hl
         inc bc
-        jp _promptlen_loop
+        jr _promptlen_loop
 _promptlen_loop_end:
         ld (hl), PROMPT_CHAR
         inc hl
