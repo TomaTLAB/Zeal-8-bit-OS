@@ -721,19 +721,24 @@ _print_char_backspace:
         ; X was 0, roll it to X maximum
         ld a, IO_VIDEO_X_MAX - 1
         ld (hl), a
+        ld hl, (cursor_pos) ;cursor_pos already decremented -> Y part is correct
+        ld a, 0b10000000
+        and a, l
+        or a, IO_VIDEO_X_MAX - 1
+        ld l, a
+        ld (cursor_pos), hl
         ; Check if cursor_y is also
         ; ASSERT(cursor_y == cursor_x + 1)
-        inc hl
+        ld hl, cursor_y
         ; Same with cursor_y
         ld a, (hl)
         dec (hl)
         or a
         ret nz
         ; Y is also 0, we have to roll it back, same for cursor_pos
-        ld a, IO_VIDEO_Y_MAX - 1
-        ld (hl), a
+        ld (hl), 0
         ; Also reset the absolute cursor
-        ld hl, IO_VIDEO_VIRT_TEXT_VRAM + IO_VIDEO_MAX_CHAR - 1
+        ld hl, IO_VIDEO_VIRT_TEXT_VRAM
         ld (cursor_pos), hl
         ret
 
