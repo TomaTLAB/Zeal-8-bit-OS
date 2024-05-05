@@ -62,8 +62,6 @@ set_location_assignment PIN_29 -to RAM_A[8]
 set_location_assignment PIN_30 -to RAM_A[4]
 set_location_assignment PIN_31 -to RAM_A[6]
 set_location_assignment PIN_22 -to RAM_A[13]
-set_location_assignment PIN_83 -to CLK_50
-set_location_assignment PIN_12 -to RAM_A[14]
 set_location_assignment PIN_39 -to RAM_D[7]
 set_location_assignment PIN_40 -to RAM_D[6]
 set_location_assignment PIN_34 -to RAM_D[5]
@@ -72,9 +70,9 @@ set_location_assignment PIN_36 -to RAM_D[3]
 set_location_assignment PIN_37 -to RAM_D[2]
 set_location_assignment PIN_41 -to RAM_D[1]
 set_location_assignment PIN_35 -to RAM_D[0]
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
+set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
 set_global_assignment -name EDA_TIME_SCALE "1 ns" -section_id eda_simulation
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT NONE -section_id eda_simulation
 set_global_assignment -name OPTIMIZE_HOLD_TIMING OFF
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING OFF
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
@@ -119,3 +117,11 @@ set_location_assignment PIN_4 -to VGA_B
 set_location_assignment PIN_6 -to V_Sync
 set_location_assignment PIN_8 -to VGA_I
 set_location_assignment PIN_81 -to H_Sync
+set_global_assignment -name MAX7000_OPTIMIZATION_TECHNIQUE AREA
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS OFF
+set_location_assignment PIN_51 -to CPU_nRD
+set_global_assignment -name SYNTH_MESSAGE_LEVEL HIGH
+set_location_assignment PIN_83 -to CLK_25
+set_location_assignment PIN_12 -to Foo
+set_global_assignment -name TIMEQUEST_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS OFF
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL OFF
