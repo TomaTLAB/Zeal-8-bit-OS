@@ -38,6 +38,7 @@
     ; Macros for modifier key flags
     DEFC KB_FLAG_IGN_BIT   = 0x7
     DEFC KB_FLAG_KEYP_BIT  = 0x6
+    DEFC KB_FLAG_RUS_BIT  = 0x5
     DEFC KB_FLAG_CTRL_BIT  = 0x4
     DEFC KB_FLAG_ALT_BIT   = 0x3
     DEFC KB_FLAG_SHIFT_BIT = 0x2

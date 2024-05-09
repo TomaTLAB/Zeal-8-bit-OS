@@ -163,7 +163,13 @@ _keyboard_read_ignore_no_update:
         ld b, a
         ; If the character received was in the base scan, we may need to convert it to
         ; an upper scan character if shift or caps lock is activated.
+
         ld a, (kb_flags)
+        push af
+        and 1 << KB_FLAG_RUS_BIT
+        call nz, keyboard_switch_to_rus
+        pop af
+        ;ld a, (kb_flags)
         and 1 << KB_FLAG_SHIFT_BIT
         call nz, keyboard_switch_to_upper
         ; Check that the size has not reached the maximum
@@ -317,6 +323,8 @@ _keyboard_ctrl_newline:
         ld de, kb_internal_buffer
         ret
 _keyboard_extended_char:
+        cp KB_SCROLL_LOCK
+        jr z, _keyboard_extended_toggle_rus
         cp KB_CAPS_LOCK
         jr z, _keyboard_extended_toggle_shift
         cp KB_LEFT_SHIFT
@@ -349,6 +357,16 @@ _keyboard_extended_toggle_shift:
         xor 1 << KB_FLAG_SHIFT_BIT
         ld (hl), a
         jp _keyboard_read_ignore
+
+_keyboard_extended_toggle_rus:
+        ; Toggle the shift/caps bit
+        ld hl, kb_flags
+        ld a, (hl)
+        xor 1 << KB_FLAG_RUS_BIT
+        ld (hl), a
+        jp _keyboard_read_ignore
+
+
 _keyboard_extended_left_arrow:
         ; The cursor shall not be at the beginning of the line
         ld a, (hl)
@@ -453,6 +471,18 @@ keyboard_switch_to_upper:
         ; Switch to upper scan table
         ld bc, upper_scan - base_scan
         add hl, bc
+        ld b, (hl)
+        ret
+
+keyboard_switch_to_rus:
+        push bc
+        ld a, c
+        cp BASE_SCAN_TABLE
+        ret nz
+        ; Switch to upper scan table
+        ld bc, base_ru_scan - base_scan
+        add hl, bc
+        pop bc
         ld b, (hl)
         ret
 
