@@ -28,6 +28,7 @@
         EXTERN exec_main_bc_de
         EXTERN exec_main_ret_success
         EXTERN try_exec_bc_de
+        EXTERN cd_main_de
 
         ; Parse and execute the command line passed as a parameter.
         ; Parameters:
@@ -146,8 +147,16 @@ _process_command_has_param:
         jr nz, _process_command_not_path
         inc de
         ld a, (de)
+        ; Check if a driver letter was given alone
+        or a
+        jr z, _process_command_change_disk
         cp '/'
         jr nz, _process_command_not_path
+        ; Allow 'A:/' as a way to switch disk
+        inc de
+        ld a, (de)
+        or a
+        jr z, _process_command_change_disk_slash_ready
         ; HL is an absolute path, clean the stack and try to execute it
         pop de
         jp _parse_exec_cmd_dot_has_param
@@ -178,22 +187,39 @@ _process_command_not_path:
         push bc
         ld bc, init_static_buffer
         ; Execute program whose name is pointed by BC
-        call try_exec_bc_de
+        call exec_main_bc_de
         ; Pop the original command name and command length
         pop bc
         pop hl
-        ; If an error occurred while executing, A will not be 0
-        ; FIXME: if the file exists but the maximum depth of program execution has been reached,
-        ; this routine will show "command not found" instead of "cannot register more".
-        ; This is because the kernel first checks the current depth before even checking if the
-        ; file exists.
-        or a
-        ; If exec was a success, the returned value from sub-process is in D
-        jr nz, _process_command_not_found_error
-        ; Pop the whole command length from the stack
-        pop bc
-        jp exec_main_ret_success
+        ret
 
+
+        ; Reach this branch if a disk letter was given `A:`, `B:`, etc...
+        ; Change the current directory if no parameter was given
+        ; Parameters:
+        ;       DE   - Points to the \0 character right after `:`
+        ;       HL   - String containing the command name
+        ;       BC   - Length of the remaining string (parameters)
+        ;       [SP] - Parameters address
+        ;       [SP + 2] - Whole command length, including parameters, must be popped
+_process_command_change_disk:
+        ; Patch the path to add the leading '/' and \0
+        ld a, '/'
+        ld (de), a
+        ; Make the assumption that we will always have space in the buffer (no parameters anyway)
+        inc de
+        xor a
+        ld (de), a
+_process_command_change_disk_slash_ready:
+        ; Put the directory path in DE as required by `cd_main_de`
+        ex de, hl
+        pop hl
+        ld a, h
+        or l
+        jr nz, _process_command_not_found_error_de
+        ; Change the current directory! (clean the stack)
+        pop bc
+        jp cd_main_de
 
         ; Print the command and an error saying we haven't found this command
         ; Parameters:
@@ -204,6 +230,7 @@ _process_command_not_found_error:
         ; Retrieve the length of the whole command line from the stack, only get
         ; the length of the command name
         ex de, hl ; name in DE
+_process_command_not_found_error_de:
         pop hl    ; whole command length
         or a
         sbc hl, bc
