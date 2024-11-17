@@ -111,6 +111,14 @@ sudo apt install git python3 python3-pip
 pip3 install --ignore-installed --user kconfiglib
 ```
 
+On WSL(?) Ubuntu, the following commands can be used to install the dependencies. They must be run as a user, not root!
+```
+sudo apt update
+sudo apt install git python3 python3-pip
+sudo apt install pipx
+pipx install kconfig-lib
+```
+
 On MacOS, the following commands can be used to install the dependencies.
 ```
 brew install make
