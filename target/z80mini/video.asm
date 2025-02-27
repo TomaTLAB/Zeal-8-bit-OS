@@ -793,7 +793,7 @@ _video_scroll_if_needed:
         ret
 
 _rom_font:
-    INCBIN "font.bin"
+    INCBIN "font.fnt"
 
 
         SECTION DRIVER_BSS
