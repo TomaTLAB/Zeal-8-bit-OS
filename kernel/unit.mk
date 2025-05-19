@@ -11,8 +11,16 @@ endif
 # Filesystems related files
 SRCS += fs/rawtable.asm
 
+ifdef CONFIG_KERNEL_ENABLE_MBR_SUPPORT
+	SRCS += fs/mbr.asm
+endif
+
 ifdef CONFIG_KERNEL_ENABLE_ZEALFS_SUPPORT
-	SRCS += fs/zealfs.asm
+	ifdef CONFIG_KERNEL_ZEALFS_V1
+		SRCS += fs/zealfs_v1.asm
+	else ifdef CONFIG_KERNEL_ZEALFS_V2
+		SRCS += fs/zealfs_v2.asm
+	endif
 endif
 
 ifdef CONFIG_ENABLE_EMULATION_HOSTFS
