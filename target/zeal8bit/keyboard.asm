@@ -1,7 +1,8 @@
-; SPDX-FileCopyrightText: 2023 Zeal 8-bit Computer <contact@zeal8bit.com>
+; SPDX-FileCopyrightText: 2023-2026 Zeal 8-bit Computer <contact@zeal8bit.com>
 ;
 ; SPDX-License-Identifier: Apache-2.0
 
+        INCLUDE "osconfig.asm"
         INCLUDE "errors_h.asm"
         INCLUDE "drivers_h.asm"
         INCLUDE "utils_h.asm"
@@ -13,14 +14,6 @@
         DEFC KB_FIFO_SIZE = 16
         DEFC KB_INTERNAL_BUFFER_SIZE = 255
 
-        DEFC KB_EVT_RELEASED = 1
-
-        ; Macros for modifier key flags
-        DEFC KB_FLAG_KEYP_BIT  = 0x7
-        DEFC KB_FLAG_CTRL_BIT  = 0x6
-        DEFC KB_FLAG_ALT_BIT   = 0x5
-        DEFC KB_FLAG_SHIFT_BIT = 0x4
-
         ; Raw or cooked
         DEFC KB_MODE_MASK      = 3
         ; Non-block or blocking
@@ -31,7 +24,7 @@
         EXTERN zos_vfs_set_stdin
 
         ; Implementation dependent, can be PS/2 or parallel or I2C
-        EXTERN keyboard_impl_upper
+        EXTERN keyboard_impl_modifiers
         EXTERN keyboard_impl_init
         EXTERN keyboard_impl_next_key
         EXTERN strlen
@@ -244,23 +237,30 @@ _keyboard_read_ignore:
         call keyboard_next_key
         or a
         jr z, _keyboard_read_ignore
-        ; Optimize KB_EVT_RELEASED == 1 case
-        ASSERT(KB_EVT_RELEASED == 1)
-        dec b
-        jp z, _keyboard_read_released_key
+        ; Check for a KB_EVT_RELEASED event
+        bit KB_EVT_RELEASED_BIT, b
+        jp nz, _keyboard_read_released_key
         ; The graphic driver should now take care of the cursor
+  IF CONFIG_LAYOUT_USE_EXTENDED_ASCII
+        ; Check if it is an extended ASCII character
+        bit KB_EVT_EXT_ASCII_BIT, b
+        jr nz, @print_ascii_char
+  ENDIF
         ; Check that it is a printable character: from 0x20 to 0x7E
         bit 7, a
         jp nz, _keyboard_extended_char
         cp 0x20
         jp c, _keyboard_ctrl_char
+@print_ascii_char:
         ; Printable character, save it and print it in B!
         ld b, a
         ; If the character received was in the base scan, we may need to convert it to
         ; an upper scan character if shift or caps lock is activated.
         ld a, (kb_flags)
-        and 1 << KB_FLAG_SHIFT_BIT
-        call nz, keyboard_impl_upper
+        and KB_FLAG_MASK
+        push de
+        call nz, keyboard_impl_modifiers
+        pop de
         ; Check that the size has not reached the maximum
         ld a, (kb_buffer_size)
         cp KB_INTERNAL_BUFFER_SIZE - 1    ; Keep space for the last \n
@@ -412,13 +412,7 @@ _keyboard_ctrl_newline:
         ld de, kb_internal_buffer
         ret
 _keyboard_extended_char:
-        cp KB_CAPS_LOCK
-        jr z, _keyboard_extended_toggle_shift
-        cp KB_LEFT_SHIFT
-        jr z, _keyboard_extended_toggle_shift
-        cp KB_RIGHT_SHIFT
-        jr z, _keyboard_extended_toggle_shift
-
+        ; Handle the arrow keys first
         ld hl, kb_buffer_cursor
         cp KB_LEFT_ARROW
         jr z, _keyboard_extended_left_arrow
@@ -428,20 +422,42 @@ _keyboard_extended_char:
         jr z, _keyboard_extended_up_arrow
         cp KB_DOWN_ARROW
         jr z, _keyboard_extended_down_arrow
-        jp _keyboard_read_ignore
+
+        ; Use L as the flag to toggle, handle CAPS_LOCK here since it's
+        ; a bit special, releasing it must not clear the flag
+        ld l, 1 << KB_FLAG_SHIFT_BIT
+        cp KB_CAPS_LOCK
+        jr z, _keyboard_extended_toggle_flag
+        ; FALL-THROUGH
+        ; Let the release logic handle the SHIFT and ALT keys since the logic is
+        ; the same, they toggle the flags
 _keyboard_read_released_key:
+  IF CONFIG_LAYOUT_USE_EXTENDED_ASCII
+        ; Check if it is an extended ASCII character
+        bit KB_EVT_EXT_ASCII_BIT, b
+        jp nz, _keyboard_read_ignore
+  ENDIF
         ; Check if the key released is shift. Let's ignore the edge case where
         ; both (left & right) shift keys are pressed and one only is released.
+        ld l, 1 << KB_FLAG_SHIFT_BIT
         cp KB_LEFT_SHIFT
-        jr z, _keyboard_extended_toggle_shift
+        jr z, _keyboard_extended_toggle_flag
         cp KB_RIGHT_SHIFT
-        jr z, _keyboard_extended_toggle_shift
-        jp _keyboard_read_ignore
-_keyboard_extended_toggle_shift:
-        ; Toggle the shift/caps bit
+        jr z, _keyboard_extended_toggle_flag
+
+        ; Handle the ALT flag similarly
+        ld l, 1 << KB_FLAG_ALT_BIT
+        cp KB_LEFT_ALT
+        jr z, _keyboard_extended_toggle_flag
+        cp KB_RIGHT_ALT
+        jp nz, _keyboard_read_ignore
+        ; Fall-through
+_keyboard_extended_toggle_flag:
+        ; Toggle the given flag bit in L register
+        ld a, l
         ld hl, kb_flags
-        ld a, (hl)
-        xor 1 << KB_FLAG_SHIFT_BIT
+        ; A ^= [kb_flags]
+        xor (hl)
         ld (hl), a
         jp _keyboard_read_ignore
 _keyboard_extended_left_arrow:

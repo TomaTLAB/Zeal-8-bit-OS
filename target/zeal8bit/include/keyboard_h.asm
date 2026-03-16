@@ -16,9 +16,6 @@
         EXT_SCAN_TABLE,
     }
 
-    DEFC KB_EVT_PRESSED = 0
-    DEFC KB_EVT_RELEASED = 1
-
     DEFC KB_PRINTABLE_CNT = 0x60
     DEFC KB_SPECIAL_START = 0x66	; Between 0x60 and 0x66, nothing special
     DEFC KB_CAPSL_SCAN 	  = 0x58

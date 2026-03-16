@@ -182,13 +182,17 @@ _keyboard_impl_push:
 
     ; Check and convert the character pressed to upper if in base scan table
     ; Parameters:
+    ;   A - Current modifiers state
     ;   B - Character received
     ;   C - Index of the character pressed in the `key_mapping` table
     ;   HL - Address of the character in the table
     ; Returns:
     ;   B - Upper character
-    PUBLIC keyboard_impl_upper
-keyboard_impl_upper:
+    PUBLIC keyboard_impl_modifier
+keyboard_impl_modifier:
+    ; Only support SHIFT modifier
+    bit KB_FLAG_SHIFT_BIT, a
+    ret z
     ; Shift the table address by key_mapping_size
     ld bc, key_mapping_end - key_mapping
     add hl, bc

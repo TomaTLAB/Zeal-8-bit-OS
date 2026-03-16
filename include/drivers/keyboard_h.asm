@@ -68,6 +68,23 @@
         KB_READ_NON_BLOCK = 1 << 2
     }
 
+    ; kb_flags_t: Flags for the keyboard modifiers
+    DEFGROUP {
+        KB_FLAG_CTRL_BIT  = 0,
+        KB_FLAG_ALT_BIT   = 1,
+        KB_FLAG_SHIFT_BIT = 2,
+
+        KB_FLAG_MASK      = 7
+    }
+
+    ; Values internal to the kernel driver
+    DEFC KB_EVT_PRESSED   = 0 << 0
+    DEFC KB_EVT_RELEASED  = 1 << 0
+    DEFC KB_EVT_EXT_ASCII = 1 << 1
+
+    DEFC KB_EVT_RELEASED_BIT  = 0
+    DEFC KB_EVT_EXT_ASCII_BIT = 1
+
 
     ; The following codes represent the keys of a 104-key keyboard that can be detected by
     ; the keyboard driver.

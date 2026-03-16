@@ -145,6 +145,12 @@ menu "Zeal 8-bit Computer configuration"
             help
                 Use standard QWERTY layout.
 
+        config TARGET_KEYBOARD_AZERTY
+            bool
+            prompt "Azerty"
+            help
+                Use French AZERTY layout.
+
         config TARGET_KEYBOARD_DVORAK
             bool
             prompt "Dvorak"
@@ -152,6 +158,18 @@ menu "Zeal 8-bit Computer configuration"
                 Use Dvorak layout.
     endchoice
 
+    config LAYOUT_USE_EXTENDED_ASCII
+        bool
+        prompt "Enable extended ASCII layout"
+        depends on TARGET_KEYBOARD_AZERTY
+        default y
+        help
+            When enabled, the keyboard layout mapping outputs
+            characters from the extended character set (Code Page 437)
+            instead of restricting output to 7-bit ASCII.
+            This allows accented characters and additional symbols to be produced
+            directly by the keyboard layout. The option slightly increases kernel
+            size (~200 bytes).
 
     config TARGET_UART_SET_MONITOR_SIZE
         bool

@@ -1,9 +1,10 @@
-; SPDX-FileCopyrightText: 2024 Zeal 8-bit Computer <contact@zeal8bit.com>
+; SPDX-FileCopyrightText: 2024-2026 Zeal 8-bit Computer <contact@zeal8bit.com>
 ;
 ; SPDX-License-Identifier: Apache-2.0
 
 ; Driver for the PS/2 keyboard protocol on Zeal 8-bit Computer motherboard
 
+    INCLUDE "osconfig.asm"
     INCLUDE "utils_h.asm"
     INCLUDE "keyboard_h.asm"
 
@@ -11,6 +12,7 @@
     EXTERN keyboard_dequeue
     EXTERN keyboard_fifo_size
 
+    DEFC SCANTABLE_SIZE = alt_scan - upper_scan
 
     SECTION KERNEL_DRV_TEXT
 
@@ -37,10 +39,11 @@ keyboard_impl_init:
     ;           to the other characters code.
     ;           0 means that no character was available.
     ;       B - Event:
-    ;            - KB_EVT_PRESSED
-    ;            - KB_EVT_RELEASED
+    ;            - KB_EVT_PRESSED  (bit 0)
+    ;            - KB_EVT_RELEASED (bit 0)
+    ;            - KB_EVT_EXT_ASCII (bit 1)
     ;
-    ;       C and HL are opaque values passed to `keyboard_switch_to_upper`
+    ;       C and HL are opaque values passed to `keyboard_impl_modifiers`
     ;       C - Scan table the character is in:
     ;            - BASE_SCAN_TABLE
     ;            - UPPER_SCAN_TABLE
@@ -79,13 +82,21 @@ _no_pending_step:
     cp KB_PRINTABLE_CNT - 1
     jp nc, _special_code ; jp nc <=> A >= KB_PRINTABLE_CNT - 1
 _regular_scancode:
-    ; Retrieve the character address in HL
+    ld d, 0
+    ld e, a
     ld hl, base_scan
-    ld c, BASE_SCAN_TABLE
-_dereference_hl_ret:
-    ADD_HL_A()
+    add hl, de
     ld a, (hl)
-    ld b, KB_EVT_PRESSED
+    ld bc, (KB_EVT_PRESSED << 8) | BASE_SCAN_TABLE
+  IF CONFIG_LAYOUT_USE_EXTENDED_ASCII
+    ; Check if the character is extended ASCII char
+    ld hl, extascii_scan
+    add hl, de
+    bit 0, (hl)
+    ret z
+    ; Extended ASCII, update B!
+    set KB_EVT_EXT_ASCII_BIT, b
+  ENDIF
     ret
 _special_code:
     ; Load in HL special scan codes
@@ -94,8 +105,12 @@ _special_code:
     jp z, _extended_code
     add -KB_SPECIAL_START
     ld hl, special_scan
-    ld c, SPECIAL_SCAN_TABLE
-    jr _dereference_hl_ret
+    ld d, 0
+    ld e, a
+    add hl, de
+    ld a, (hl)
+    ld bc, (KB_EVT_PRESSED << 8) | SPECIAL_SCAN_TABLE
+    ret
 _release_char:
     ; Jump to this label if a RELEASE scan code was received without any
     ; special byte before (0xE0)
@@ -196,26 +211,43 @@ _keyboard_next_key_hold:
     ret
 
 
-    ; Check and convert the character pressed to upper if in base scan table
+    ; Check and convert the character placed in B according to the modifiers
+    ; passed in register A.
     ; Parameters:
+    ;   A - Current modifiers state
     ;   B - Character received
     ;   C - Scan table the character pressed was in
     ;   HL - Address of the character in base scan
     ; Returns:
     ;   B - Upper character
-    PUBLIC keyboard_impl_upper
-keyboard_impl_upper:
+    ; Alters:
+    ;   A, C, DE, HL
+    PUBLIC keyboard_impl_modifiers
+keyboard_impl_modifiers:
+    ; Backup the modifiers in D
+    ld d, a
+    ; Make sure we received a base scan character
     ld a, c
     cp BASE_SCAN_TABLE
     ret nz
-    ; Switch to upper scan table
-    ld bc, upper_scan - base_scan
+    ; Make HL point to the next table: upper_table
+    ld bc, SCANTABLE_SIZE
     add hl, bc
+    bit KB_FLAG_SHIFT_BIT, d
+    jr nz, deref_table
+    bit KB_FLAG_ALT_BIT, d
+    ; Return if not ALT either
+    ret z
+    ; Make HL point to the next table: alt_table
+    add hl, bc
+deref_table:
     ld b, (hl)
     ret
 
 
-    IF CONFIG_TARGET_KEYBOARD_DVORAK
+    IF CONFIG_TARGET_KEYBOARD_AZERTY
+        INCLUDE "ps2_scan_azerty.asm"
+    ELIF CONFIG_TARGET_KEYBOARD_DVORAK
         INCLUDE "ps2_scan_dvorak.asm"
     ELSE
         INCLUDE "ps2_scan_qwerty.asm"
