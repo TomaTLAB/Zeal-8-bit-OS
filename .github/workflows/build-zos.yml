@@ -1,44 +1,25 @@
 name: Build with ZDE
 
 on:
-  push:
-    branches: [ main, develop, 'ci/test-autobuild' ]
-  pull_request:
-    branches: [ main, develop ]
   workflow_dispatch:
+  workflow_call:
     inputs:
-      zde_path:
-        description: 'ZDE installation path'
-        required: false
-        default: '/opt/zde'
+      target:
+        required: true
+        type: string
+      config-path:
+        required: true
+        type: string
+      artifact-name:
+        required: true
+        type: string
+      romdisk:
+        required: true
+        type: boolean
 
 jobs:
-  build-zeal-os:
+  build-zos:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        include:
-          - target: zeal8bit
-            config-path: configs/zeal8bit/hw_zvb.conf
-            artifact-name: zos_target_zeal8bit_hw_zvb
-            romdisk: true
-          - target: zeal8bit emulator
-            config-path: configs/zeal8bit/emu_zvb.conf
-            artifact-name: zos_target_zeal8bit_emulator
-            romdisk: true
-          - target: zeal8bit UART only
-            config-path: configs/zeal8bit/hw_uart.conf
-            artifact-name: zos_target_zeal8bit_hw_uart
-            romdisk: true
-          - target: agon
-            config-path: configs/agon/hw.conf
-            artifact-name: zos_target_agon
-            romdisk: false
-          - target: trs80
-            config-path: configs/trs80/hw.conf
-            artifact-name: zos_target_trs80
-            romdisk: false
     
     services:
       docker:
@@ -63,12 +44,12 @@ jobs:
     - name: Setup ZDE
       uses: zoul0813/zeal-dev-environment/github/setup-zde@feature/zde-py
     
-    - name: Build OS for ${{ matrix.target }}
+    - name: Build OS for ${{ inputs.target }}
       run: |
         cd ${{ github.workspace }}/zos
-        git log | head -20 >> $GITHUB_STEP_SUMMARY
-        cp ${{ matrix.config-path }} os.conf
+        cp ${{ inputs.config-path }} os.conf
         zde cmake
+        cp os.conf build
     
     - name: Verify build artifacts
       run: |
@@ -90,29 +71,24 @@ jobs:
         fi
     
     - name: Upload build artifacts (with romdisk)
-      if: always() && matrix.romdisk
+      if: ${{ inputs.romdisk }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.artifact-name }}
+        name: ${{ inputs.artifact-name }}
         path: |
           zos/build/os.bin
           zos/build/os.map
           zos/build/os_with_romdisk.img
-          zos/os.conf
-        retention-days: 30
+          zos/build/os.conf
+        retention-days: 60
     
     - name: Upload build artifacts (without romdisk)
-      if: always() && !matrix.romdisk
+      if: ${{ !inputs.romdisk }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.artifact-name }}
+        name: ${{ inputs.artifact-name }}
         path: |
           zos/build/os.bin
           zos/build/os.map
-          zos/os.conf
-        retention-days: 30
-    
-    - name: Build summary
-      if: success()
-      run: |
-        echo "✓ Zeal 8-bit OS built successfully for **${{ matrix.target }}** with ZDE" >> $GITHUB_STEP_SUMMARY
+          zos/build/os.conf
+        retention-days: 60
