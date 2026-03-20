@@ -41,7 +41,7 @@ GET_GPIO:               MACRO   REG, VAL
         INCLUDE "errors_h.asm"
         INCLUDE "drivers_h.asm"
         INCLUDE "video_h.asm"
-        INCLUDE "keyboard_h.asm"
+        INCLUDE "drivers/keyboard_h.asm"
         INCLUDE "interrupt_h.asm"
         INCLUDE "utils_h.asm"
 
