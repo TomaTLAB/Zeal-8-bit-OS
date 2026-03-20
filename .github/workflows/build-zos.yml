@@ -1,0 +1,118 @@
+name: Build with ZDE
+
+on:
+  push:
+    branches: [ main, develop, 'ci/test-autobuild' ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      zde_path:
+        description: 'ZDE installation path'
+        required: false
+        default: '/opt/zde'
+
+jobs:
+  build-zeal-os:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        include:
+          - target: zeal8bit
+            config-path: configs/zeal8bit/hw_zvb.conf
+            artifact-name: zos_target_zeal8bit_hw_zvb
+            romdisk: true
+          - target: zeal8bit emulator
+            config-path: configs/zeal8bit/emu_zvb.conf
+            artifact-name: zos_target_zeal8bit_emulator
+            romdisk: true
+          - target: zeal8bit UART only
+            config-path: configs/zeal8bit/hw_uart.conf
+            artifact-name: zos_target_zeal8bit_hw_uart
+            romdisk: true
+          - target: agon
+            config-path: configs/agon/hw.conf
+            artifact-name: zos_target_agon
+            romdisk: false
+          - target: trs80
+            config-path: configs/trs80/hw.conf
+            artifact-name: zos_target_trs80
+            romdisk: false
+    
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged
+    
+    steps:
+    - name: Checkout Zeal 8-bit OS
+      uses: actions/checkout@v4
+      with:
+        path: zos
+    
+    - name: Set up prerequisites
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          bash \
+          git \
+          python3 \
+          python3-pip
+    
+    - name: Setup ZDE
+      uses: zoul0813/zeal-dev-environment/github/setup-zde@feature/zde-py
+    
+    - name: Build OS for ${{ matrix.target }}
+      run: |
+        cd ${{ github.workspace }}/zos
+        git log | head -20 >> $GITHUB_STEP_SUMMARY
+        cp ${{ matrix.config-path }} os.conf
+        zde cmake
+    
+    - name: Verify build artifacts
+      run: |
+        cd ${{ github.workspace }}/zos
+        
+        if [ -f "build/os.bin" ]; then
+          echo "✓ OS binary created"
+          ls -lh build/os.bin
+        else
+          echo "✗ OS binary not found"
+          exit 1
+        fi
+        
+        if [ -f "build/os_with_romdisk.img" ]; then
+          echo "✓ OS with romdisk created"
+          ls -lh build/os_with_romdisk.img
+        else
+          echo "⚠ OS with romdisk not found (optional)"
+        fi
+    
+    - name: Upload build artifacts (with romdisk)
+      if: always() && matrix.romdisk
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact-name }}
+        path: |
+          zos/build/os.bin
+          zos/build/os.map
+          zos/build/os_with_romdisk.img
+          zos/os.conf
+        retention-days: 30
+    
+    - name: Upload build artifacts (without romdisk)
+      if: always() && !matrix.romdisk
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact-name }}
+        path: |
+          zos/build/os.bin
+          zos/build/os.map
+          zos/os.conf
+        retention-days: 30
+    
+    - name: Build summary
+      if: success()
+      run: |
+        echo "✓ Zeal 8-bit OS built successfully for **${{ matrix.target }}** with ZDE" >> $GITHUB_STEP_SUMMARY

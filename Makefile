@@ -23,7 +23,7 @@ ifndef PYTHON_BIN
 endif
 
 # Kconfig related
-export KCONFIG_CONFIG = configs/zeal8bit.default
+export KCONFIG_CONFIG = configs/zeal8bit/hw_zvb.default
 ifneq ("$(wildcard os.conf)", "")
     export KCONFIG_CONFIG = os.conf
 endif
