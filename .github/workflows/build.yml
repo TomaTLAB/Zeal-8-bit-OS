@@ -20,28 +20,28 @@ jobs:
   build-zos:
     name: Build Zeal 8-bit OS
     uses: ./.github/workflows/build-zos.yml
-    
+
     strategy:
       matrix:
         include:
           - target: zeal8bit
-            config-path: configs/zeal8bit/hw_zvb.conf
-            artifact-name: zos_target_zeal8bit_hw_zvb
+            config-path: configs/zeal8bit/os.conf
+            artifact-name: zos_target_zeal8bit_hw
             romdisk: true
-          - target: zeal8bit emulator
-            config-path: configs/zeal8bit/emu_zvb.conf
+          - target: zeal8bit/emu
+            config-path: configs/zeal8bit/emu.conf
             artifact-name: zos_target_zeal8bit_emulator
             romdisk: true
-          - target: zeal8bit UART only
-            config-path: configs/zeal8bit/hw_uart.conf
+          - target: zeal8bit/uart
+            config-path: configs/zeal8bit/uart.conf
             artifact-name: zos_target_zeal8bit_hw_uart
             romdisk: true
           - target: agon
-            config-path: configs/agon/hw.conf
+            config-path: configs/agon/os.conf
             artifact-name: zos_target_agon
             romdisk: false
           - target: trs80
-            config-path: configs/trs80/hw.conf
+            config-path: configs/trs80/os.conf
             artifact-name: zos_target_trs80
             romdisk: false
     with:
@@ -84,12 +84,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete "latest" --yes || true
+          cd ${{ github.workspace }}/
+          gh release delete "latest"  --repo ${{ github.repository }} --yes || true
 
       - name: Create or Update Latest Release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
+          generate_release_notes: true
           name: Latest build (${{ steps.tag.outputs.sha }})
           body: |
             Built from commit: ${{ steps.tag.outputs.sha }}
@@ -97,5 +99,11 @@ jobs:
             Date: ${{ steps.tag.outputs.release_date }}
           tag_name: latest
           preserve_order: true
-          generate_release_notes: true
-          files: "artifacts/*.zip"
+          files: |
+            artifacts/zos_target_zeal8bit_hw.zip
+            artifacts/zos_target_zeal8bit_emulator.zip
+            artifacts/zos_target_zeal8bit_hw_uart.zip
+            artifacts/zos_target_agon.zip
+            artifacts/zos_target_trs80.zip
+
+          

@@ -20,75 +20,75 @@ on:
 jobs:
   build-zos:
     runs-on: ubuntu-latest
-    
+
     services:
       docker:
         image: docker:latest
         options: --privileged
-    
+
     steps:
-    - name: Checkout Zeal 8-bit OS
-      uses: actions/checkout@v4
-      with:
-        path: zos
-    
-    - name: Set up prerequisites
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          bash \
-          git \
-          python3 \
-          python3-pip
-    
-    - name: Setup ZDE
-      uses: zoul0813/zeal-dev-environment/github/setup-zde@feature/zde-py
-    
-    - name: Build OS for ${{ inputs.target }}
-      run: |
-        cd ${{ github.workspace }}/zos
-        cp ${{ inputs.config-path }} os.conf
-        zde cmake
-        cp os.conf build
-    
-    - name: Verify build artifacts
-      run: |
-        cd ${{ github.workspace }}/zos
-        
-        if [ -f "build/os.bin" ]; then
-          echo "✓ OS binary created"
-          ls -lh build/os.bin
-        else
-          echo "✗ OS binary not found"
-          exit 1
-        fi
-        
-        if [ -f "build/os_with_romdisk.img" ]; then
-          echo "✓ OS with romdisk created"
-          ls -lh build/os_with_romdisk.img
-        else
-          echo "⚠ OS with romdisk not found (optional)"
-        fi
-    
-    - name: Upload build artifacts (with romdisk)
-      if: ${{ inputs.romdisk }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: |
-          zos/build/os.bin
-          zos/build/os.map
-          zos/build/os_with_romdisk.img
-          zos/build/os.conf
-        retention-days: 60
-    
-    - name: Upload build artifacts (without romdisk)
-      if: ${{ !inputs.romdisk }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: |
-          zos/build/os.bin
-          zos/build/os.map
-          zos/build/os.conf
-        retention-days: 60
+      - name: Checkout Zeal 8-bit OS
+        uses: actions/checkout@v4
+        with:
+          path: zos
+
+      - name: Set up prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bash \
+            git \
+            python3 \
+            python3-pip
+
+      - name: Setup ZDE
+        uses: zoul0813/zeal-dev-environment/github/setup-zde@main
+
+      - name: Build OS for ${{ inputs.target }}
+        run: |
+          cd ${{ github.workspace }}/zos
+          cp ${{ inputs.config-path }} os.conf
+          zde cmake
+          cp os.conf build
+
+      - name: Verify build artifacts
+        run: |
+          cd ${{ github.workspace }}/zos
+
+          if [ -f "build/os.bin" ]; then
+            echo "✓ OS binary created"
+            ls -lh build/os.bin
+          else
+            echo "✗ OS binary not found"
+            exit 1
+          fi
+
+          if [ -f "build/os_with_romdisk.img" ]; then
+            echo "✓ OS with romdisk created"
+            ls -lh build/os_with_romdisk.img
+          else
+            echo "⚠ OS with romdisk not found (optional)"
+          fi
+
+      - name: Upload build artifacts (with romdisk)
+        if: ${{ inputs.romdisk }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: |
+            zos/build/os.bin
+            zos/build/os.map
+            zos/build/os_with_romdisk.img
+            zos/build/os.conf
+          retention-days: 60
+
+      - name: Upload build artifacts (without romdisk)
+        if: ${{ !inputs.romdisk }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: |
+            zos/build/os.bin
+            zos/build/os.map
+            zos/build/os.conf
+          retention-days: 60
