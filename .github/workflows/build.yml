@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main
-      - ci/test-autobuild
+    tags:
+      - 'v*'
   pull_request:
     types:
       - opened
