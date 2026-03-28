@@ -39,7 +39,13 @@ endfunction()
 
 
 function(zos_add_asset target asset_file)
-    get_filename_component(asset_name "${asset_file}" NAME_WE)
+    # Use full filename (including extension) for symbol names to avoid collisions
+    # like: tileset.zts vs tileset.ztp -> tileset_zts / tileset_ztp.
+    get_filename_component(asset_filename "${asset_file}" NAME)
+    string(REPLACE "." "_" asset_name "${asset_filename}")
+    # Keep symbol names safe for assembler/C
+    string(REGEX REPLACE "[^A-Za-z0-9_]" "_" asset_name "${asset_name}")
+
     set(asm_dir "${CMAKE_CURRENT_BINARY_DIR}/assets")
     file(MAKE_DIRECTORY "${asm_dir}")
     set(asm_file_path "${asm_dir}/${asset_name}.asm")
