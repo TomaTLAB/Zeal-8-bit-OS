@@ -63,7 +63,7 @@ menu "Zeal 8-bit Computer configuration"
 
         config TARGET_COMPACTFLASH_TIMEOUT
             int "CompactFlash initialization timeout (ms)"
-            default 30
+            default 450
             range 0 65535
             help
                 On startup, the CompactFlash takes some time to initialize itself, this will slow down the kernel startup time.
