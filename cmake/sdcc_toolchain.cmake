@@ -32,7 +32,9 @@ set(SDCC_REL0 "$ENV{ZOS_PATH}/kernel_headers/sdcc/bin/zos_crt0.rel")
 set(ZOS_LINK_FLAGS  "-n" # No echo of commands to STDOUT
                     "-b _HEADER=0x4000"
                     "-i" # Intel Hex output
-                    "-y" # SDCDB Debug output
+                    # "-y" # SDCDB Debug output
+                    "-m" # Output map
+                    "-w" # Wide Map Format
                     "-k $ENV{ZOS_PATH}/kernel_headers/sdcc/lib" # Library path
                     "-l z80" # Link the Z80 library
     )

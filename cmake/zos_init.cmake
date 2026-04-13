@@ -13,8 +13,7 @@ endif()
 set(CMAKE_TOOLCHAIN_FILE $ENV{ZOS_PATH}/cmake/${ZOS_TOOLCHAIN}_toolchain.cmake)
 
 # Helper to convert an ELF file to a raw binary
-function(elf_to_bin target)
-    set(bin_file "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.bin")
+function(elf_to_bin target bin_file)
     add_custom_target(${target}_bin ALL
         COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${target}> ${bin_file}
         DEPENDS $<TARGET_FILE:${target}>
@@ -25,9 +24,7 @@ function(elf_to_bin target)
 endfunction()
 
 # Helper to convert an IHX file to a raw binary
-function(ihx_to_bin target)
-    set(bin_file "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.bin")
-
+function(ihx_to_bin target bin_file)
     add_custom_target(${target}_bin ALL
         COMMAND ${CMAKE_OBJCOPY} --input-target=ihex --output-target=binary $<TARGET_FILE:${target}> ${bin_file}
         DEPENDS $<TARGET_FILE:${target}>
@@ -37,6 +34,34 @@ function(ihx_to_bin target)
     set_property(TARGET ${target}_bin PROPERTY RAW_BINARY ${bin_file})
 endfunction()
 
+# Convert the generated binary (IHX, ELF, ...) into a raw binary
+function(zos_add_outputs target)
+    set(output_extension "bin")
+    cmake_parse_arguments(ZOS_ADD_OUTPUTS "" "WITH_EXTENSION" "" ${ARGN})
+    if(ZOS_ADD_OUTPUTS_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR
+            "zos_add_outputs: unexpected arguments: ${ZOS_ADD_OUTPUTS_UNPARSED_ARGUMENTS}")
+    endif()
+    if(DEFINED ZOS_ADD_OUTPUTS_WITH_EXTENSION)
+        if(ZOS_ADD_OUTPUTS_WITH_EXTENSION STREQUAL "NONE")
+            set(output_extension "")
+        else()
+            set(output_extension "${ZOS_ADD_OUTPUTS_WITH_EXTENSION}")
+        endif()
+    endif()
+
+    if(output_extension STREQUAL "")
+        set(bin_file "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}")
+    else()
+        set(bin_file "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target}.${output_extension}")
+    endif()
+
+    if(ZOS_TOOLCHAIN STREQUAL "sdcc")
+        ihx_to_bin(${target} "${bin_file}")
+    elseif(ZOS_TOOLCHAIN STREQUAL "gnu")
+        elf_to_bin(${target} "${bin_file}")
+    endif()
+endfunction()
 
 function(zos_add_asset target asset_file)
     # Use full filename (including extension) for symbol names to avoid collisions
@@ -76,16 +101,6 @@ function(zos_add_assets target)
         zos_add_asset(${target} ${file})
     endforeach()
 endfunction()
-
-# Convert the generated binary (IHX, ELF, ...) into a raw binary
-function(zos_add_outputs target)
-    if(ZOS_TOOLCHAIN STREQUAL "sdcc")
-        ihx_to_bin(${target})
-    elseif(ZOS_TOOLCHAIN STREQUAL "gnu")
-        elf_to_bin(${target})
-    endif()
-endfunction()
-
 
 function(zos_use_search)
     cmake_parse_arguments(PARSE_ARGV 0 ZOS_USE_SEARCH
