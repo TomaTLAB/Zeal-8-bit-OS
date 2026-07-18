@@ -54,9 +54,13 @@ target_drivers_hook:
         ; They shall not be the same but for the moment,
         ; let's say it is the case as only the PIO is the only driver
         ; implemented that uses the interrupts
+  IFNDEF CONFIG_TARGET_ENABLE_PS2_EXTENSION_BOARD
         PUBLIC interrupt_default_handler
-        PUBLIC interrupt_pio_handler
 interrupt_default_handler:
+        ; Fall-through
+  ENDIF
+
+        PUBLIC interrupt_pio_handler
 interrupt_pio_handler:
         push af
         ; Check which pin triggered the interrupt, as soon as possible, multiple pins can trigger

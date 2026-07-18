@@ -128,7 +128,6 @@ menu "Zeal 8-bit Computer configuration"
             prompt "Parallel"
             help
                 A parallel keyboard is connected.
-
     endchoice
 
 
@@ -176,6 +175,38 @@ menu "Zeal 8-bit Computer configuration"
             This allows accented characters and additional symbols to be produced
             directly by the keyboard layout. The option slightly increases kernel
             size (~200 bytes).
+
+    config TARGET_ENABLE_PS2_EXTENSION_BOARD
+        bool
+        prompt "Enable PS/2 extension board support"
+        default n
+        help
+            Enable the PS/2 extension board for keyboard and/or mouse support.
+
+    menu "PS/2 extension board configuration"
+        depends on TARGET_ENABLE_PS2_EXTENSION_BOARD
+
+        config PS2_EXT_IO_ADDR
+            hex "PS/2 extension board I/O address"
+            default 0x20
+            range 0x00 0x7F
+            help
+                I/O address where the PS/2 extension board is mapped.
+
+        config PS2_EXT_KEYBOARD_PORT0
+            bool "Enable keyboard support on port 0"
+            depends on TARGET_KEYBOARD_PS2
+            default y
+            help
+                Enable keyboard support on port 0 of the PS/2 extension board.
+
+        config PS2_EXT_MOUSE_PORT1
+            bool "Enable mouse support on port 1"
+            default n
+            help
+                Enable mouse support on port 1 of the PS/2 extension board.
+
+    endmenu
 
     config TARGET_UART_SET_MONITOR_SIZE
         bool

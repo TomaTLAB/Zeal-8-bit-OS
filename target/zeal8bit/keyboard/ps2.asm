@@ -3,10 +3,17 @@
 ; SPDX-License-Identifier: Apache-2.0
 
 ; Driver for the PS/2 keyboard protocol on Zeal 8-bit Computer motherboard
+; This driver also support the PS/2 extension (if enabled in the menuconfig)
 
     INCLUDE "osconfig.asm"
     INCLUDE "utils_h.asm"
     INCLUDE "keyboard_h.asm"
+  IF CONFIG_PS2_EXT_KEYBOARD_PORT0
+    INCLUDE "log_h.asm"
+    INCLUDE "mmu_h.asm"
+    INCLUDE "ps2_ext_h.asm"
+    INCLUDE "strutils_h.asm"
+  ENDIF
 
     EXTERN keyboard_enqueue
     EXTERN keyboard_dequeue
@@ -25,7 +32,55 @@
     ; Can alter anything
     PUBLIC keyboard_impl_init
 keyboard_impl_init:
+  IF CONFIG_PS2_EXT_KEYBOARD_PORT0
+    ; Try to read the version of the PS/2 extension board
+    PS2_READ_REG(PS2_EXT_REG_VERSION)
+    ; If the version is 0, then the board is not connected...
+    or a
+    jr z, _ps2_ext_not_plugged
+    ; Save version in B
+    ld b, a
+    ; Issue a reset to the MCU, print the version in the meanwhile
+    ; PS2_WRITE_REG (PS2_EXT_REG_RESET, PS2_EXT_RESET_SWRST)
+    ALLOC_STACK_256 ()
+    ; Print the PS/2 firmware version
+    push bc
+    ; Put stack buffer in DE
+    ex de, hl
+    ld hl, ps2_firmware_version_msg
+    call strformat
+    ex de, hl
+    call zos_log_info
+    ; Regardless of the return value, deallocate the stack
+    FREE_STACK_256 ()
+
+    ; Set the threshold for the keyboard to 1
+    PS2_WRITE_REG (PS2_EXT_REG_P0_RX_THRESHOLD, 1)
+    ; Clear the P0 FIFO and state
+    PS2_WRITE_REG (PS2_EXT_REG_RESET, PS2_EXT_RESET_P0_CLR_FIFO)
+    ; Set the P0 RX and RX INT enable bits
+    PS2_WRITE_REG (PS2_EXT_REG_CTRL, PS2_EXT_CTRL_P0_RX_ENA | PS2_EXT_CTRL_P0_RX_INT_ENA)
+    ; We will get an interrupt in a few hundreds of ms after sending the reset command
+    ld a, 1
+    ld (kb_init_phase), a
+    ; The board is plugged in, issue a reset to the keyboard
+    ld a, PS2_CMD_RESET
+    out (PS2_EXT_PORT0_FIFO), a
+    ; Nothing more to do here, return success
+    xor a
     ret
+_ps2_ext_not_plugged:
+    ; Print an error message if the extension board is not detected
+    ld hl, ps2_ext_not_detected_msg
+    call zos_log_warning
+    xor a
+    ret
+ps2_firmware_version_msg:
+    DEFM "PS/2 board firmware v", FORMAT_U8_DEC, ".0\n", 0
+ps2_ext_not_detected_msg: DEFM "PS/2 board not plugged in\n", 0
+  ELSE
+    ret
+  ENDIF
 
 
     ; Returns the next key pressed on the keyboard. If no key was pressed,
@@ -265,6 +320,64 @@ extended_scan:
     DEFB 0, KB_RIGHT_ARROW, KB_UP_ARROW, 0, 0, 0, 0, KB_PG_DOWN, 0, 0, KB_PG_UP
 
 
+  IF CONFIG_TARGET_ENABLE_PS2_EXTENSION_BOARD
+    ; The extension board will simply pull the interrupt line low, letting the data lines be pulled-down, it will
+    ; thus use the default interrupt handler vector.
+    PUBLIC interrupt_default_handler
+interrupt_default_handler:
+    ; keyboard_enqueue only alters A and HL
+    push af
+    push de
+    push hl
+    ; The kernel RAM may NOT BE MAPPED, we have to map it here
+    MMU_GET_PAGE_NUMBER(MMU_PAGE_3)
+    ; Save former page in D, we need it to restore it
+    ld d, a
+    MMU_MAP_KERNEL_RAM(MMU_PAGE_3)
+
+    ; Check if we are in the initialization phase, if that's the case, send ACK so that we can support Perixx keyboards
+    ld a, (kb_init_phase)
+    or a
+    jr z, _pop_data
+    ; Set the init phase to 0
+    xor a
+    ld (kb_init_phase), a
+    ; Pop the data we just received to clear the FIFO
+    in a, (PS2_EXT_PORT0_FIFO) ; should be 0xaa
+    ; Send ACK to the keyboard, as we just received the reset command
+    ld a, PS2_CMD_ACK
+    out (PS2_EXT_PORT0_FIFO), a
+    ; Set the Num lock LED
+    ld a, PS2_CMD_SET_LED
+    out (PS2_EXT_PORT0_FIFO), a
+    ld a, PS2_LED_NUM_LOCK_MSK
+    out (PS2_EXT_PORT0_FIFO), a
+    jr _done_enqueueing
+
+    ; Enqueue all the data received until we have no more byte to read (RX FIFO empty)
+    PS2_SELECT_REG (PS2_EXT_REG_STATUS)
+_pop_data:
+    in a, (PS2_EXT_DATA_REG)
+    and PS2_EXT_STATUS_P0_RX_RDY
+    jr z, _done_enqueueing
+    ; Read the data from the PS/2 extension board and enqueue it
+    in a, (PS2_EXT_PORT0_FIFO)
+    call keyboard_enqueue
+    jr _pop_data
+
+_done_enqueueing:
+    ; Clear the interrupts in all cases
+    PS2_WRITE_REG (PS2_EXT_REG_IRQ_STATUS, PS2_EXT_IRQ_P0_RX)
+
+    ; Restore page 3 and exit
+    ld a, d
+    MMU_SET_PAGE_NUMBER(MMU_PAGE_3)
+    pop hl
+    pop de
+    pop af
+    ei
+    reti
+  ENDIF
 
 
     PUBLIC keyboard_ps2_int_handler
@@ -280,3 +393,7 @@ keyboard_ps2_int_handler:
 
     ; State that will be updated according to the keys received in non-blocking mode
 kb_next_step: DEFS 2
+
+  IF CONFIG_PS2_EXT_KEYBOARD_PORT0
+kb_init_phase: DEFS 1
+  ENDIF
