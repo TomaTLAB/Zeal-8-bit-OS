@@ -33,6 +33,9 @@
     PUBLIC keyboard_impl_init
 keyboard_impl_init:
   IF CONFIG_PS2_EXT_KEYBOARD_PORT0
+    ; Set the keyboard to init phase by default, as such, if it's 0, the keyboard is present
+    ld a, 1
+    ld (kb_init_phase), a
     ; Try to read the version of the PS/2 extension board
     PS2_READ_REG(PS2_EXT_REG_VERSION)
     ; If the version is 0, then the board is not connected...
@@ -60,10 +63,8 @@ keyboard_impl_init:
     PS2_WRITE_REG (PS2_EXT_REG_RESET, PS2_EXT_RESET_P0_CLR_FIFO)
     ; Set the P0 RX and RX INT enable bits
     PS2_WRITE_REG (PS2_EXT_REG_CTRL, PS2_EXT_CTRL_P0_RX_ENA | PS2_EXT_CTRL_P0_RX_INT_ENA)
-    ; We will get an interrupt in a few hundreds of ms after sending the reset command
-    ld a, 1
-    ld (kb_init_phase), a
     ; The board is plugged in, issue a reset to the keyboard
+    ; We will get an interrupt in a few hundreds of ms after sending the reset command
     ld a, PS2_CMD_RESET
     out (PS2_EXT_PORT0_FIFO), a
     ; Nothing more to do here, return success
@@ -300,6 +301,39 @@ deref_table:
     ret
 
 
+    ; Callback invoked when the CAPS Lock state changed (enabled or disabled)
+    ; Parameters:
+    ;   A - (kb_flags_t) New keyboard flags
+    ;   HL - Pointer to kb_flags_t
+    ; Returns:
+    ;   None
+    ; Alters:
+    ;   A, C, DE, HL
+    PUBLIC keyboard_impl_capslock_update
+keyboard_impl_capslock_update:
+  IF CONFIG_TARGET_ENABLE_PS2_EXTENSION_BOARD
+    ; If we are in init phase, the keyboard is not plugged in or the caps lock was pressed too early
+    ld a, (kb_init_phase)
+    or a
+    ret nz
+    ; The keyboard is plugged and running, update the LED according to parameter
+    ld d, PS2_LED_NUM_LOCK_MSK
+    bit KB_FLAG_SHIFT_BIT, (hl)
+    jr z, _keyboard_impl_capslock_off
+    ld d, PS2_LED_NUM_LOCK_MSK | PS2_LED_CAPS_LOCK_MSK
+_keyboard_impl_capslock_off:
+    ; Set the Caps Lock and Num Lock LEDs
+    ld a, PS2_CMD_SET_LED
+    di
+    out (PS2_EXT_PORT0_FIFO), a
+    ld a, d
+    out (PS2_EXT_PORT0_FIFO), a
+    ei
+    ; TX interrupts are disabled and the FIFO should already be empty (or available at least)
+  ENDIF
+    ret
+
+
     IF CONFIG_TARGET_KEYBOARD_AZERTY
         INCLUDE "ps2_scan_azerty.asm"
     ELIF CONFIG_TARGET_KEYBOARD_DVORAK
@@ -338,7 +372,7 @@ interrupt_default_handler:
     ; Check if we are in the initialization phase, if that's the case, send ACK so that we can support Perixx keyboards
     ld a, (kb_init_phase)
     or a
-    jr z, _pop_data
+    jr z, _select_and_pop
     ; Set the init phase to 0
     xor a
     ld (kb_init_phase), a
@@ -354,7 +388,8 @@ interrupt_default_handler:
     out (PS2_EXT_PORT0_FIFO), a
     jr _done_enqueueing
 
-    ; Enqueue all the data received until we have no more byte to read (RX FIFO empty)
+_select_and_pop:
+    ; Enqueue all the data received until we have no more bytes to read (RX FIFO empty)
     PS2_SELECT_REG (PS2_EXT_REG_STATUS)
 _pop_data:
     in a, (PS2_EXT_DATA_REG)

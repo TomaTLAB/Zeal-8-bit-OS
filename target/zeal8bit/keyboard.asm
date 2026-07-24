@@ -27,6 +27,7 @@
         EXTERN keyboard_impl_modifiers
         EXTERN keyboard_impl_init
         EXTERN keyboard_impl_next_key
+        EXTERN keyboard_impl_capslock_update
         EXTERN strlen
 
         ; Get the number the characters in the FIFO in register A and set the flags
@@ -423,12 +424,11 @@ _keyboard_extended_char:
         cp KB_DOWN_ARROW
         jr z, _keyboard_extended_down_arrow
 
-        ; Use L as the flag to toggle, handle CAPS_LOCK here since it's
-        ; a bit special, releasing it must not clear the flag
-        ld l, 1 << KB_FLAG_SHIFT_BIT
+        ; Handle CAPS_LOCK here since it's a bit special:
+        ; press toggles the flag, releasing it must not clear the flag.
         cp KB_CAPS_LOCK
-        jr z, _keyboard_extended_toggle_flag
-        ; FALL-THROUGH
+        jr z, _keyboard_capslock_pressed
+        ; FALL-THROUGH (for non-caps-lock extended keys)
         ; Let the release logic handle the SHIFT and ALT keys since the logic is
         ; the same, they toggle the flags
 _keyboard_read_released_key:
@@ -459,6 +459,14 @@ _keyboard_extended_toggle_flag:
         ; A ^= [kb_flags]
         xor (hl)
         ld (hl), a
+        jp _keyboard_read_ignore
+_keyboard_capslock_pressed:
+        ; Toggle the shift flag (caps lock toggles shift on/off)
+        ld hl, kb_flags
+        ld a, 1 << KB_FLAG_SHIFT_BIT
+        xor (hl)
+        ld (hl), a
+        call keyboard_impl_capslock_update
         jp _keyboard_read_ignore
 _keyboard_extended_left_arrow:
         ; The cursor shall not be at the beginning of the line

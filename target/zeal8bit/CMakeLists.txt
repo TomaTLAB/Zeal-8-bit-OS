@@ -1,21 +1,16 @@
-# Set the linker script
-
-# Optional MMU support
-if(CONFIG_KERNEL_TARGET_HAS_MMU)
-    set(mmu_file mmu.asm)
-else()
-    set(mmu_file "")
-endif()
-
 # Source files common to MMU and no-MMU configurations
 set(srcs
     pio.asm
     i2c.asm
     keyboard.asm
-    ${mmu_file}
     interrupt_vect.asm
     eeprom.asm
 )
+
+# Optional MMU support
+if(CONFIG_KERNEL_TARGET_HAS_MMU)
+    list(APPEND srcs mmu.asm)
+endif()
 
 # Only include the romdisk driver if enabled in the menuconfig
 if (CONFIG_ENABLE_ROMDISK)
