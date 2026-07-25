@@ -26,7 +26,9 @@
     DEFC KB_LEFT_SUPER_SCAN = 0x1f
     DEFC KB_NUMPAD_DIV_SCAN = 0x4a
     DEFC KB_NUMPAD_RET_SCAN = 0x5a
-    DEFC KB_PRT_SCREEN_SCAN = 0x12	; When Print Screen is received, the scan is 0xE0 0x12
+    ; Fake shift is 0xE0 0x12
+    DEFC KB_FAKE_SHIFT      = 0x12
+    DEFC KB_PRT_SCREEN_SCAN = 0x7C
     DEFC KB_MAPPED_EXT_SCANS = 0x69 ; Extended characters which scan code is 0xE0 0x69 and above
                                     ; are treated with a mapped array
 

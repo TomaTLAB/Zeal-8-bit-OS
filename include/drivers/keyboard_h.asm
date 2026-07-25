@@ -70,11 +70,12 @@
 
     ; kb_flags_t: Flags for the keyboard modifiers
     DEFGROUP {
-        KB_FLAG_CTRL_BIT  = 0,
-        KB_FLAG_ALT_BIT   = 1,
-        KB_FLAG_SHIFT_BIT = 2,
+        KB_FLAG_CTRL_BIT    = 0,
+        KB_FLAG_ALT_BIT     = 1,
+        KB_FLAG_SHIFT_BIT   = 2,
+        KB_FLAG_NUM_LOCK_BIT = 3,
 
-        KB_FLAG_MASK      = 7
+        KB_FLAG_MASK        = 15
     }
 
     ; Values internal to the kernel driver

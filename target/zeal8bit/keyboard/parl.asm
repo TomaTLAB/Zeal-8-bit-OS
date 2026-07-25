@@ -200,6 +200,29 @@ keyboard_impl_modifier:
     ret
 
 
+    ; Callback invoked when keyboard flags changed (num lock, caps lock).
+    ; Parameters:
+    ;   A - (kb_flags_t) New keyboard flags
+    ;   HL - Pointer to kb_flags_t
+    ; Returns:
+    ;   None
+    ; Alters:
+    ;   A, C, DE, HL
+    PUBLIC keyboard_impl_flags_update
+keyboard_impl_flags_update:
+    ld a, 0
+    bit KB_FLAG_NUM_LOCK_BIT, (hl)
+    jr z, _keyboard_impl_flags_num_off
+    or 1 << 1       ; Num Lock LED bit (bit 1)
+_keyboard_impl_flags_num_off:
+    bit KB_FLAG_SHIFT_BIT, (hl)
+    jr z, _keyboard_impl_flags_caps_off
+    or 1 << 2       ; Caps Lock LED bit (bit 2)
+_keyboard_impl_flags_caps_off:
+    out (KB_CUR_ADDRESS), a
+    ret
+
+
 key_mapping:
     ; 0xFF represents the function key
     DB KB_KEY_BACKQUOTE, KB_KEY_2,        KB_KEY_4,     KB_KEY_6,     KB_KEY_8,         KB_KEY_MINUS,         KB_KEY_BACKSPACE, 0

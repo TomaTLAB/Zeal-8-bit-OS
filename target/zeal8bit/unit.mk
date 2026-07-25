@@ -15,12 +15,23 @@ else
 endif
 
 # Add the source files that are common to MMU and no-MMU configuration
-SRCS := pio.asm i2c.asm keyboard.asm romdisk.asm $(MMU_FILE) interrupt_vect.asm eeprom.asm
+SRCS := pio.asm i2c.asm romdisk.asm $(MMU_FILE) interrupt_vect.asm eeprom.asm
+
+ifdef CONFIG_TARGET_ENABLE_PS2_EXTENSION_BOARD
+	SRCS += ps2_ext.asm
+endif
+
+# Keyboard shall be initialized AFTER PS/2 extension (if present)
+SRCS += keyboard.asm
 
 ifdef CONFIG_TARGET_KEYBOARD_PS2
 	SRCS += keyboard/ps2.asm
 else
 	SRCS += keyboard/parl.asm
+endif
+
+ifdef CONFIG_PS2_EXT_MOUSE_PORT1
+	SRCS += mouse.asm mouse/ps2.asm
 endif
 
 # Add the suffix "_romdisk" to the full binary name

@@ -27,7 +27,7 @@
         EXTERN keyboard_impl_modifiers
         EXTERN keyboard_impl_init
         EXTERN keyboard_impl_next_key
-        EXTERN keyboard_impl_capslock_update
+        EXTERN keyboard_impl_flags_update
         EXTERN strlen
 
         ; Get the number the characters in the FIFO in register A and set the flags
@@ -424,6 +424,9 @@ _keyboard_extended_char:
         cp KB_DOWN_ARROW
         jr z, _keyboard_extended_down_arrow
 
+        ; Handle NUMPAD_LOCK: toggle flag and update LEDs
+        cp KB_NUMPAD_LOCK
+        jr z, _keyboard_numlock_pressed
         ; Handle CAPS_LOCK here since it's a bit special:
         ; press toggles the flag, releasing it must not clear the flag.
         cp KB_CAPS_LOCK
@@ -460,13 +463,18 @@ _keyboard_extended_toggle_flag:
         xor (hl)
         ld (hl), a
         jp _keyboard_read_ignore
+_keyboard_numlock_pressed:
+        ; Toggle the num lock flag
+        ld a, 1 << KB_FLAG_NUM_LOCK_BIT
+        jr _keyboard_flags_update
 _keyboard_capslock_pressed:
+        ld a, 1 << KB_FLAG_SHIFT_BIT
+_keyboard_flags_update:
         ; Toggle the shift flag (caps lock toggles shift on/off)
         ld hl, kb_flags
-        ld a, 1 << KB_FLAG_SHIFT_BIT
         xor (hl)
         ld (hl), a
-        call keyboard_impl_capslock_update
+        call keyboard_impl_flags_update
         jp _keyboard_read_ignore
 _keyboard_extended_left_arrow:
         ; The cursor shall not be at the beginning of the line

@@ -2,7 +2,6 @@
 set(srcs
     pio.asm
     i2c.asm
-    keyboard.asm
     interrupt_vect.asm
     eeprom.asm
 )
@@ -17,11 +16,25 @@ if (CONFIG_ENABLE_ROMDISK)
     list(APPEND srcs romdisk.asm)
 endif()
 
+# PS/2 extension board driver (shared between keyboard and mouse).
+# Must be initialized before the keyboard driver below.
+if(CONFIG_TARGET_ENABLE_PS2_EXTENSION_BOARD)
+    list(APPEND srcs ps2_ext.asm)
+endif()
+
+# Keyboard driver, appended after ps2_ext so it's initialized second.
+list(APPEND srcs keyboard.asm)
+
 # Conditional keyboard source
 if(CONFIG_TARGET_KEYBOARD_PS2)
     list(APPEND srcs keyboard/ps2.asm)
 else()
     list(APPEND srcs keyboard/parl.asm)
+endif()
+
+# Mouse driver (PS/2 extension board port 1)
+if(CONFIG_PS2_EXT_MOUSE_PORT1)
+    list(APPEND srcs mouse.asm mouse/ps2.asm)
 endif()
 
 # Conditionally prepend uart.asm if it's stdout
