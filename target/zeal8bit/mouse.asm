@@ -7,15 +7,19 @@
 ;   mouse_impl_init
 ;   mouse_impl_int_handler  (called from the PS/2 ext interrupt handler)
 ;
-; PS/2 mouse packets are 3 bytes (buttons, X, Y). The port threshold is
-; set to 3 so the interrupt fires only when a full packet is available.
-; No byte-level FIFO is needed — a single 3-byte buffer suffices.
+; The generic driver maintains a 5-byte state buffer:
+;   Byte 0: Buttons (PS/2 format)
+;   Bytes 1-2: Signed 16-bit accumulated X movement
+;   Bytes 3-4: Signed 16-bit accumulated Y movement
+;
+; Implementations call mouse_update_state when a packet arrives.
 
     INCLUDE "osconfig.asm"
     INCLUDE "errors_h.asm"
     INCLUDE "drivers_h.asm"
     INCLUDE "utils_h.asm"
     INCLUDE "mmu_h.asm"
+    INCLUDE "drivers/mouse_h.asm"
 
     EXTERN mouse_impl_init
 
@@ -26,12 +30,15 @@
     PUBLIC mouse_init
 mouse_init:
     call mouse_impl_init
-    xor a
-    ld (mouse_packet_ready), a
-    ret
-
-mouse_deinit:
+    ; Fall-through
 mouse_open:
+    xor a
+    ld (mouse_state), a
+mouse_clear_acc:
+    ld hl, 0
+    ld (mouse_x_acc), hl
+    ld (mouse_y_acc), hl
+mouse_deinit:
 mouse_close:
     xor a
     ret
@@ -43,40 +50,68 @@ mouse_write:
     ret
 
 
-    ; Read a mouse packet (3 bytes: buttons, X, Y).
+    ; Accumulate a 3-byte PS/2 mouse packet into the state buffer.
+    ; Called by the implementation's interrupt handler.
     ; Parameters:
-    ;   DE - Destination buffer.
-    ;   BC - Size to read in bytes (must be >= 3)
+    ; C - Buttons
+    ; D - 8-bit signed X movement
+    ; E - 8-bit signed Y movement
+    ; Alters:
+    ;   A, BC, DE, HL
+    PUBLIC mouse_update_state
+mouse_update_state:
+    ld a, c
+    and 7
+    ld (mouse_state), a         ; store buttons
+
+    ; Conver X to int16_t and add to accumulator
+    ld a, d
+    ld c, a
+    rlca
+    sbc a
+    ld b, a
+    ld hl, (mouse_x_acc)
+    add hl, bc
+    ld (mouse_x_acc), hl
+
+    ; Conver Y to int16_t and add to accumulator
+    ld a, e
+    ld c, a
+    rlca
+    sbc a
+    ld b, a
+    ld hl, (mouse_y_acc)
+    add hl, bc
+    ld (mouse_y_acc), hl
+    ret
+
+
+    ; Read the accumulated mouse state.
+    ; Parameters:
+    ;   DE - Destination buffer (must be >= 5 bytes).
+    ;   BC - Size to read in bytes (must be >= 5).
     ;   A  - DRIVER_OP_NO_OFFSET
     ; Returns:
     ;   A  - ERR_SUCCESS
-    ;   BC - 3 if a packet was available, 0 otherwise
+    ;   BC - 5 if state was available, 0 otherwise
     ; Alters:
     ;   A, BC, DE, HL
 mouse_read:
     ld a, b
     or a
-    ; If B is not 0, we can proceed directly    
     jr nz, _mouse_read_ok
-    ; Check if C is < 3, return 0 in that case
     ld a, c
-    cp 3
+    cp 5
     jr c, _mouse_read_empty
 _mouse_read_ok:
-    ; Check if a full packet is available
-    ld a, (mouse_packet_ready)
-    or a
-    jr z, _mouse_read_empty
-    ; Copy the 3-byte packet to the user buffer
-    ld hl, mouse_packet
-    ldi
-    ldi
-    ldi
-    ld bc, 3
-    xor a
-    ; Reset the ready state since A is 0
-    ld (mouse_packet_ready), a
-    ret
+    ; Copy the 5-byte state to the user buffer
+    ld hl, mouse_state
+    ld bc, 5
+    ldir
+    ; Reset X/Y accumulators (keep buttons)
+    ld bc, 5
+    ; Tail-call
+    jr mouse_clear_acc
 _mouse_read_empty:
     ld bc, 0
     xor a
@@ -84,10 +119,9 @@ _mouse_read_empty:
 
 
     SECTION DRIVER_BSS
-    PUBLIC mouse_packet
-    PUBLIC mouse_packet_ready
-mouse_packet: DEFS 3
-mouse_packet_ready: DEFS 1
+mouse_state: DEFS 1 ; buttons left, right, middle
+mouse_x_acc: DEFS 2 ; X movement
+mouse_y_acc: DEFS 2 ; Y movement
 
 
     SECTION KERNEL_DRV_VECTORS

@@ -105,7 +105,17 @@
     DEFC PS2_CMD_TEST_OK     = 0xAA
     DEFC PS2_CMD_ACK         = 0xFA
     DEFC PS2_CMD_SET_LED     = 0xED
+    ; Mouse commands
     DEFC PS2_CMD_ENA_REPORT  = 0xF4
+    DEFC PS2_CMD_SET_RATE    = 0xF3
+    ; Only the following sample rates are valid
+    DEFC PS2_RATE_10         = 10
+    DEFC PS2_RATE_20         = 20
+    DEFC PS2_RATE_40         = 40
+    DEFC PS2_RATE_60         = 60
+    DEFC PS2_RATE_80         = 80
+    DEFC PS2_RATE_100        = 100
+    DEFC PS2_RATE_200        = 200
 
     DEFC PS2_LED_SCROLL_LOCK_MSK = 1 << 0
     DEFC PS2_LED_NUM_LOCK_MSK    = 1 << 1

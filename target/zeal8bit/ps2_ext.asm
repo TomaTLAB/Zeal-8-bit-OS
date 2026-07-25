@@ -80,6 +80,7 @@ ps2_ext_not_detected_msg: DEFM "PS/2 board not plugged in\n", 0
     PUBLIC interrupt_default_handler
 interrupt_default_handler:
     push af
+    push bc
     push de
     push hl
     ; Map kernel RAM to access driver BSS
@@ -95,7 +96,9 @@ interrupt_default_handler:
   ENDIF
   IF CONFIG_PS2_EXT_MOUSE_PORT1
     bit PS2_EXT_IRQ_P1_RX_BIT, e
+    push de
     call nz, mouse_impl_int_handler
+    pop de
   ENDIF
     ; Clear the IRQ bits that were handled (W1C)
     PS2_WRITE_REG(PS2_EXT_REG_IRQ_STATUS, e)
@@ -104,6 +107,7 @@ interrupt_default_handler:
     MMU_SET_PAGE_NUMBER(MMU_PAGE_3)
     pop hl
     pop de
+    pop bc
     pop af
     ei
     reti
