@@ -30,8 +30,14 @@ else
 	SRCS += keyboard/parl.asm
 endif
 
-ifdef CONFIG_PS2_EXT_MOUSE_PORT1
-	SRCS += mouse.asm mouse/ps2.asm
+ifdef CONFIG_TARGET_ENABLE_MOUSE
+	SRCS += mouse.asm
+ifdef CONFIG_TARGET_MOUSE_PS2
+	SRCS += mouse/ps2.asm
+endif
+ifdef CONFIG_TARGET_MOUSE_SNES
+	SRCS += mouse/snes.asm
+endif
 endif
 
 # Add the suffix "_romdisk" to the full binary name

@@ -94,7 +94,7 @@ interrupt_default_handler:
     bit PS2_EXT_IRQ_P0_RX_BIT, e
     call nz, keyboard_ext_int_handler
   ENDIF
-  IF CONFIG_PS2_EXT_MOUSE_PORT1
+  IF CONFIG_PS2_EXT_MOUSE_PORT1 && CONFIG_TARGET_MOUSE_PS2
     bit PS2_EXT_IRQ_P1_RX_BIT, e
     push de
     call nz, mouse_impl_int_handler

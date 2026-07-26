@@ -44,6 +44,11 @@ mouse_impl_init:
     ret
 
 
+    ; No polling on PS/2 mice in stream mode
+    PUBLIC mouse_impl_poll
+mouse_impl_poll:
+    ret
+
     ; Interrupt handler for PS/2 extension board port 1.
     ; Reads a full 3-byte packet (buttons, X, Y) from the P1 FIFO
     ; and passes it to mouse_update_state for accumulation.

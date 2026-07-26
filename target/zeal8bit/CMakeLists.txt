@@ -32,9 +32,15 @@ else()
     list(APPEND srcs keyboard/parl.asm)
 endif()
 
-# Mouse driver (PS/2 extension board port 1)
-if(CONFIG_PS2_EXT_MOUSE_PORT1)
-    list(APPEND srcs mouse.asm mouse/ps2.asm)
+# Mouse driver
+if(CONFIG_TARGET_ENABLE_MOUSE)
+    list(APPEND srcs mouse.asm)
+    if(CONFIG_TARGET_MOUSE_PS2)
+        list(APPEND srcs mouse/ps2.asm)
+    endif()
+    if(CONFIG_TARGET_MOUSE_SNES)
+        list(APPEND srcs mouse/snes.asm)
+    endif()
 endif()
 
 # Conditionally prepend uart.asm if it's stdout

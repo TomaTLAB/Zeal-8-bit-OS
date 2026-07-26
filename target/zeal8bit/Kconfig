@@ -208,6 +208,33 @@ menu "Zeal 8-bit Computer configuration"
 
     endmenu
 
+    config TARGET_ENABLE_MOUSE
+    bool "Enable mouse support"
+    default n
+    help
+        Enable mouse driver. At least one mouse type must be selected below.
+
+    choice
+        prompt "Mouse type"
+        default TARGET_MOUSE_SNES
+        depends on TARGET_ENABLE_MOUSE
+        help
+            Select the mouse hardware to use.
+
+    config TARGET_MOUSE_SNES
+        bool "SNES mouse"
+        help
+            SNES mouse connected to the Zeal 8-bit Computer user port via
+            the SNES controller board. Bit-bangs the PIO to read movement.
+
+    config TARGET_MOUSE_PS2
+        bool "PS/2 mouse (extension board port 1)"
+        depends on PS2_EXT_MOUSE_PORT1
+        help
+            PS/2 mouse connected to port 1 of the PS/2 extension board.
+
+    endchoice
+
     config TARGET_UART_SET_MONITOR_SIZE
         bool
         prompt "Resize host monitor to 80x40"

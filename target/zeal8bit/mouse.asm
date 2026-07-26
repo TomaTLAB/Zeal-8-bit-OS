@@ -22,6 +22,7 @@
     INCLUDE "drivers/mouse_h.asm"
 
     EXTERN mouse_impl_init
+    EXTERN mouse_impl_poll
 
 
     SECTION KERNEL_DRV_TEXT
@@ -104,6 +105,10 @@ mouse_read:
     cp 5
     jr c, _mouse_read_empty
 _mouse_read_ok:
+    ; Poll function may alter DE (if implemented)
+    push de
+    call mouse_impl_poll
+    pop de
     ; Copy the 5-byte state to the user buffer
     ld hl, mouse_state
     ld bc, 5
