@@ -467,7 +467,7 @@ _free_pages_loop:
 
         ; Make the page C, pointed by HL, free (not owned)
         ; Parameters:
-        ;   HL - Address of page C int he owner array
+        ;   HL - Address of page C in the owner array
         ;   C - Page index
         ; Returns:
         ;   [HL] - 0
@@ -490,8 +490,8 @@ free_page_c:
         ; Parameters:
         ;   B - Page to get the owner address from
         ; Returns:
-        ;   HL - Owner address
-        ;   A - Current owner
+        ;   HL - Page's owner address
+        ;   A  - Current program (owner) index
         ; Alters:
         ;   A, HL, DE
 _zos_page_owner_addr:
@@ -503,7 +503,6 @@ _zos_page_owner_addr:
         add hl, de
         CURRENT_OWNER()
         ret
-
 
         ; Mark the given page as owned byt he current program
         ; Parameters:
@@ -545,6 +544,10 @@ zos_loader_palloc:
         ;       ERR_INVALID_PARAMETER if the page doesn't belong to the current program
         PUBLIC zos_loader_pfree
 zos_loader_pfree:
+        ; Make sure the page is in bounds
+        ld a, b
+        cp MMU_RAM_PHYS_START_IDX
+        jr c, _zos_loader_invalid_param
         call _zos_page_owner_addr
         ; Make sure they are the same
         sub (hl)
@@ -553,6 +556,8 @@ zos_loader_pfree:
         ld (hl), a
         ; Free the page in the MMU
         MMU_FREE_PAGE()
+        ; Return success
+        xor a
         ret
 _zos_loader_invalid_param:
         ld a, ERR_INVALID_PARAMETER
@@ -560,9 +565,9 @@ _zos_loader_invalid_param:
 
 
         SECTION KERNEL_BSS
-        ; Keep the owners of the pages allacoted via `palloc` in this array, this will simplify the code above
+        ; Keep the owners of the pages allocated via `palloc` in this array, this will simplify the code above
         ; compared to pushing the allocated pages on the `_stack_user_pages` stack. 0 means no owner. Some
-        ; pages may be actually used, but the macro `MMU_ALLOC_PAGE` will simply never return themit, so it's
+        ; pages may be actually used, but the macro `MMU_ALLOC_PAGE` will simply never return them, so it's
         ; safe to keep it as not owned.
 _page_owners: DEFS MMU_RAM_PHYS_PAGES
 
