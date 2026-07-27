@@ -555,6 +555,7 @@ zos_loader_pfree:
         ; Marke the page as free
         ld (hl), a
         ; Free the page in the MMU
+        ld a, b
         MMU_FREE_PAGE()
         ; Return success
         xor a
